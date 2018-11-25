@@ -1,0 +1,28 @@
+{
+  "name": "WhatsappStatusSaver",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.6.1",
+    "react-native": "0.57.5",
+    "react-native-image-zoom-viewer": "^2.2.24",
+    "react-native-vector-icons": "^6.1.0",
+    "react-native-video": "^4.0.1",
+    "react-native-video-player": "^0.10.0",
+    "react-navigation": "^3.0.0",
+    "rn-fetch-blob": "^0.10.13"
+  },
+  "devDependencies": {
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.49.2",
+    "react-test-renderer": "16.6.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
