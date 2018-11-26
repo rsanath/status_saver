@@ -1,11 +1,11 @@
+import I18n from 'react-native-i18n';
 import en from './en'
 
-export const t = key => {
-    const val = en[key]
-    if (!val) {
-        return "";
-    } else {
-        return val;
-    }
+I18n.fallbacks = true;
+I18n.translations = {
+  en
+};
 
+export const t = key => {
+    I18n.t('key')
 }

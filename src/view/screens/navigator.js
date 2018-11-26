@@ -2,9 +2,8 @@ import React from 'react';
 import { createMaterialTopTabNavigator, createAppContainer, createStackNavigator } from "react-navigation";
 import ImagesScreen from "./images-screen";
 import VideosScreen from "./videos-screen";
-import theme from '../view/theme';
+import theme from '../theme/theme'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import StatusVideoPlayer from './status-video-player';
 
 const StatuScreen = createMaterialTopTabNavigator({
     Photos: {

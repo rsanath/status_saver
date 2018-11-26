@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
 import Video from 'react-native-video-player';
-import StatusActionBar from './status-actionbar';
-import { getHeightForFullWidth, toast } from '../helpers/app-helper';
+import StatusActionBar from '../widgets/status-actionbar';
+import { getHeightForFullWidth } from '../../helpers/app-helper';
 
 export default class StatusVideoPlayer extends Component {
     constructor(props) {
@@ -28,8 +28,6 @@ export default class StatusVideoPlayer extends Component {
                     <Video
                         autoplay={true}
                         resizeMode={'contain'}
-                        onHideControls={() => this.setState({ showActions: false })}
-                        onShowControls={() => this.setState({ showActions: true })}
                         videoWidth={this.state.screenWidth}
                         videoHeight={this.state.vidContainerHeight}
                         loop={true}

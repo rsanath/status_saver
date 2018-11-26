@@ -1,3 +1,6 @@
+import {t} from '../i18n/i18n';
+import C from '../constants';
+import {presistImage, toast, shareImage, shareVideo} from './app-helper';
 const RNFetchBlob = require('rn-fetch-blob').default
 const fs = RNFetchBlob.fs
 
@@ -32,4 +35,10 @@ const isVideo = file => {
     const parts = file.split('.')
     const ext = parts[parts.length - 1]
     return ext == 'mp4'
+}
+
+export const saveWhatsAppStatus = status => {
+    presistImage(status, C.whatappStatusDir)
+        .then(() => toast(t('photoSavedToDeviceMsg')))
+        .catch(e => toast(t('unableToPhotoSaveMsg\nErrMsg: ' + e.toString())))
 }

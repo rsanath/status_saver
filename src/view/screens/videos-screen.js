@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
+    StatusBar,
     FlatList,
     View,
     Text,
     TouchableOpacity,
-    Modal,
     Dimensions,
-    ImageBackground
+    ImageBackground,
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+// import Modal from "react-native-modal";
 
-import { requestStoragePermission } from '../helpers/permissions-helper';
-import { getVideoStatuses, isWhatsappInstalled } from '../helpers/whatsapp-helper';
-import StatusActionBar from "./status-actionbar";
-import { presistImage, toast, shareImage, shareVideo } from '../helpers/app-helper';
-import { t } from '../i18n/i18n'
+import AppComponent from '../app-component';
+import { requestStoragePermission } from '../../helpers/permissions-helper';
+import { getVideoStatuses, isWhatsappInstalled } from '../../helpers/whatsapp-helper';
+import { shareVideo } from '../../helpers/app-helper';
+
 import StatusVideoPlayer from './status-video-player';
 
 
-export default class VideoScreen extends Component {
+export default class VideoScreen extends AppComponent {
     state = {
+        ...this.state,
         showActions: true,
         showModal: false,
         currentIndex: 0,
@@ -36,7 +38,7 @@ export default class VideoScreen extends Component {
     }
 
     renderVideoThumbnail({ item, index }) {
-        const size = Dimensions.get('window').width / 2
+        const size = Dimensions.get('window').width / (this.isPortrait() ? 2 : 4)
         const onPress = () => this.setState({ showModal: true, showActions: true, currentIndex: index })
 
         return (
@@ -52,40 +54,28 @@ export default class VideoScreen extends Component {
         )
     }
 
-    saveStatus = () => {
-        const path = this.state.statuses[this.state.currentIndex]
-        presistImage(path)
-            .then(() => toast(t('photoSavedToDeviceMsg')))
-            .catch((e) => toast(t('unableToPhotoSaveMsg\nErrMsg: ' + e.toString())))
-    }
-
-    shareVideo = () => {
-        const path = this.state.statuses[this.state.currentIndex]
-        try {
-            shareVideo(path)
-        } catch (e) {
-            toast('Unable to share\nErrMsg: ' + e.toString())
-        }
-    }
+    getViewingStatus = () => this.state.statuses[this.state.currentIndex]
 
     render() {
 
         return (
-            <View style={styles.container}>
+            <View style={this.theme.containers.screen}>
                 <Modal
                     hardwareAccelerated={true}
                     animationType="slide"
                     onRequestClose={() => this.setState({ showModal: false })}
                     visible={this.state.showModal}>
+                    <StatusBar hidden />
                     <StatusVideoPlayer
-                        onSavePress={this.saveStatus.bind(this)}
-                        onSharePress={this.shareVideo.bind(this)}
+                        onSharePress={() => shareVideo(this.getViewingStatus())}
+                        onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
                         video={{ uri: this.state.statuses[this.state.currentIndex] }}
                     />
                 </Modal>
 
                 <FlatList
-                    numColumns={2}
+                    key={this.state.orientation}
+                    numColumns={this.isPortrait() ? 2 : 4}
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
                     renderItem={this.renderVideoThumbnail.bind(this)}
@@ -94,12 +84,3 @@ export default class VideoScreen extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    }
-});

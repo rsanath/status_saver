@@ -9,7 +9,11 @@
   "dependencies": {
     "react": "16.6.1",
     "react-native": "0.57.5",
+    "react-native-i18n": "^2.0.15",
     "react-native-image-zoom-viewer": "^2.2.24",
+    "react-native-modal": "^7.0.0",
+    "react-native-paper": "^2.2.8",
+    "react-native-typography": "^1.4.0",
     "react-native-vector-icons": "^6.1.0",
     "react-native-video": "^4.0.1",
     "react-native-video-player": "^0.10.0",

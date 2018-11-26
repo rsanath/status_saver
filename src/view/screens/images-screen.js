@@ -1,16 +1,26 @@
-import React, { Component } from 'react';
-import { StyleSheet, FlatList, View, Text, Image, TouchableWithoutFeedback, Modal, Dimensions } from 'react-native';
+import React from 'react';
+import {
+    FlatList,
+    View,
+    StatusBar,
+    Image,
+    TouchableWithoutFeedback,
+    Dimensions,
+    Modal
+} from 'react-native';
+// import Modal from "react-native-modal";
+
+import AppComponent from '../app-component';
+import { requestStoragePermission } from '../../helpers/permissions-helper';
+import { getPhotoStatuses, isWhatsappInstalled, saveWhatsAppStatus, Platform } from '../../helpers/whatsapp-helper';
+import StatusActionBar from "../widgets/status-actionbar";
+import { shareImage } from '../../helpers/app-helper';
+
 import ZoomImageViewer from 'react-native-image-zoom-viewer'
 
-import { requestStoragePermission } from '../helpers/permissions-helper';
-import { getPhotoStatuses, isWhatsappInstalled } from '../helpers/whatsapp-helper';
-import StatusActionBar from "./status-actionbar";
-import { presistImage, toast, shareImage } from '../helpers/app-helper';
-import { t } from '../i18n/i18n'
-
-
-export default class ImagesScreen extends Component {
+export default class ImagesScreen extends AppComponent {
     state = {
+        ...this.state,
         showModal: false,
         currentIndex: 0,
         statuses: []
@@ -22,10 +32,8 @@ export default class ImagesScreen extends Component {
         }
     }
 
-    getStatusCount = () => this.state.statuses.length
-
     renderPhoto({ item, index }) {
-        const size = Dimensions.get('window').width / 2
+        const size = Dimensions.get('window').width / (this.isPortrait() ? 2 : 4)
 
         return (
             <TouchableWithoutFeedback onPress={() => this.setState({ showModal: true, showActions: true, currentIndex: index })} >
@@ -36,38 +44,26 @@ export default class ImagesScreen extends Component {
         )
     }
 
-    saveImage = () => {
-        const path = this.state.statuses[this.state.currentIndex]
-        presistImage(path)
-            .then(() => toast(t('photoSavedToDeviceMsg')))
-            .catch((e) => toast(t('unableToPhotoSaveMsg\nErrMsg: ' + e.toString())))
-    }
-
-    shareImage = () => {
-        const path = this.state.statuses[this.state.currentIndex]
-        try {
-            shareImage(path)
-        } catch (e) {
-            toast('Unable to share\nErrMsg: ' + e.toString())
-        }
-    }
+    getViewingStatus = () => this.state.statuses[this.state.currentIndex]
 
     renderFooter() {
         return (
             <StatusActionBar
-                onSharePress={this.shareImage.bind(this)}
-                onSavePress={this.saveImage.bind(this)}
+                onSharePress={() => shareImage(this.getViewingStatus())}
+                onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
                 visible={this.state.showActions} />
         )
     }
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={this.theme.containers.screen}>
+
                 <Modal
                     animationType="slide"
                     onRequestClose={() => this.setState({ showModal: false })}
                     visible={this.state.showModal}>
+                    <StatusBar hidden />
                     <ZoomImageViewer
                         index={this.state.currentIndex}
                         renderIndicator={() => null}
@@ -78,8 +74,10 @@ export default class ImagesScreen extends Component {
                         renderFooter={this.renderFooter.bind(this)}
                         imageUrls={this.state.statuses.map(url => ({ url: 'file://' + url }))} />
                 </Modal>
+
                 <FlatList
-                    numColumns={2}
+                    key={this.state.orientation}
+                    numColumns={this.isPortrait() ? 2 : 4}
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
                     renderItem={this.renderPhoto.bind(this)}
@@ -88,12 +86,3 @@ export default class ImagesScreen extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    }
-});
