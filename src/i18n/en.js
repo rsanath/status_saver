@@ -8,7 +8,7 @@ export default {
 
     // messages
     statusSaveSuccessMsg: 'Saved to device',
-    statusSaveFailureMsg: 'Unable to save the image to device',
+    statusSaveFailureMsg: 'Unable to save the media to device',
     shareFailureMsg: 'Unable to share the media.',
 
     components: {

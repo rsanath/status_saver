@@ -1,3 +1,3 @@
 export default  {
-    statusPresistLocation: '/sdcard/WhatsApp\ Statuses'
+    whatsAppStatusPersistPath: '/sdcard/WhatsApp\ Statuses'
 }

@@ -1,14 +1,16 @@
-import {t} from '../i18n/i18n';
+import { t } from '../i18n/i18n';
 import C from '../constants';
-import {presistImage, toast, shareImage, shareVideo} from './app-helper';
+import { presistImage, toast, shareImage, shareVideo } from './app-helper';
 const RNFetchBlob = require('rn-fetch-blob').default
 const fs = RNFetchBlob.fs
 
 const whatappStatusDir = '/sdcard/WhatsApp/Media/.Statuses'
 
 export const getStatuses = () => {
-    return fs.ls(whatappStatusDir)
-        .then(files => files.map(file => `${whatappStatusDir}/${file}`))
+    return fs.lstat(whatappStatusDir)
+        .then(files => sortByLatestFirst(files))
+        .then(files => files.map(file => file.path))
+        .catch(() => toast('ape'))
 }
 
 export const isWhatsappInstalled = async () => {
@@ -31,14 +33,18 @@ const isPhoto = file => {
     return ext == 'jpg'
 }
 
-const isVideo = file => {
+const isVideo = file => { 
     const parts = file.split('.')
     const ext = parts[parts.length - 1]
     return ext == 'mp4'
 }
 
 export const saveWhatsAppStatus = status => {
-    presistImage(status, C.whatappStatusDir)
-        .then(() => toast(t('photoSavedToDeviceMsg')))
-        .catch(e => toast(t('unableToPhotoSaveMsg\nErrMsg: ' + e.toString())))
+    presistImage(status, C.whatsAppStatusPersistPath)
+        .then(() => toast(t('statusSaveSuccessMsg')))
+        .catch(e => toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString()))
+}
+
+const sortByLatestFirst = files => {
+    return files.sort((a, b) => b.lastModified - a.lastModified)
 }
