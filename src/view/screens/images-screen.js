@@ -8,7 +8,6 @@ import {
     Dimensions,
     Modal
 } from 'react-native';
-// import Modal from "react-native-modal";
 
 import AppComponent from '../app-component';
 import { requestStoragePermission } from '../../helpers/permissions-helper';

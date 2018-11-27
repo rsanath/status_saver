@@ -8,6 +8,8 @@ export default class StatusActionBar extends AppComponent {
         super(props);
     }
 
+
+
     render() {
         if (this.props.visible == false || this.state.visible == false) return null;
 

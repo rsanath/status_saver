@@ -10,7 +10,7 @@ export const getStatuses = () => {
     return fs.lstat(whatappStatusDir)
         .then(files => sortByLatestFirst(files))
         .then(files => files.map(file => file.path))
-        .catch(() => toast('ape'))
+        .catch(() => [])
 }
 
 export const isWhatsappInstalled = async () => {

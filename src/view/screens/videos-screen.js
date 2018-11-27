@@ -60,19 +60,13 @@ export default class VideoScreen extends AppComponent {
 
         return (
             <View style={this.theme.containers.screen}>
-                <Modal
-                    hardwareAccelerated={true}
-                    animationType="slide"
+                <StatusVideoPlayer
+                    visible={this.state.showModal}
                     onRequestClose={() => this.setState({ showModal: false })}
-                    visible={this.state.showModal}>
-                    <StatusBar hidden />
-                    <StatusVideoPlayer
-                        onSharePress={() => shareVideo(this.getViewingStatus())}
-                        onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
-                        video={{ uri: this.state.statuses[this.state.currentIndex] }}
-                    />
-                </Modal>
-
+                    onSharePress={() => shareVideo(this.getViewingStatus())}
+                    onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
+                    video={{ uri: this.state.statuses[this.state.currentIndex] }}
+                />
                 <FlatList
                     key={this.state.orientation}
                     numColumns={this.isPortrait() ? 2 : 4}
