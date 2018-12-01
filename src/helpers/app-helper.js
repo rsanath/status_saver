@@ -13,9 +13,6 @@ export const presistImage = async (path, dest) => {
     const fileName = getFileName(path)
     const destPath = dest + '/' + fileName
 
-    console.log(path)
-    console.log(destPath)
-
     await fs.cp(path, destPath)
 }
 

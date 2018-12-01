@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Dimensions } from 'react-native';
+
 import DisplyHelper from '../helpers/display-helper';
 import theme from './theme/theme';
 import { toast } from '../helpers/app-helper';
 import { t } from '../i18n/i18n'
+
 
 export default class AppComponent extends Component {
   constructor(props) {

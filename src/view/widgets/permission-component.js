@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-import { Button } from 'react-native-paper';
-
 import AppComponent from '../app-component';
 import { checkStoragePermission } from '../../helpers/permissions-helper';
 
@@ -45,10 +43,7 @@ export default class PermissionComponent extends AppComponent {
     render() {
         return (
             <View style={this.styles.container} >
-                <Text style={this.styles.permissionMsg} >{this.getMessageForStatus()}</Text>
-                <Button icon="add-a-photo" mode="contained" onPress={() => console.log('Pressed')}>
-                    {this.getButtonLabel()}
-                </Button>
+                <Text style={this.styles.permissionMsg} >{this.getMessageForStatus()}</Text>               
             </View>
         );
     }

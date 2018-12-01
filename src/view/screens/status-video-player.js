@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Modal, ProgressBarAndroid, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
+
 import StatusActionBar from '../widgets/status-actionbar';
 import AppComponent from '../app-component';
+
 
 export default class StatusVideoPlayer extends AppComponent {
     constructor(props) {

@@ -5,6 +5,8 @@ const RNFetchBlob = require('rn-fetch-blob').default
 const fs = RNFetchBlob.fs
 
 const whatappStatusDir = '/sdcard/WhatsApp/Media/.Statuses'
+const GBWhatsAppStatusDir = '/sdcard/GBWhatsApp/Media/.Statuses'
+const whatsAppBusinessStatusDir = '/sdcard/WhatsApp\ Business/Media/.Statuses'
 
 export const getStatuses = () => {
     return fs.lstat(whatappStatusDir)

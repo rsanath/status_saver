@@ -1,20 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+
 import AppComponent from '../app-component';
+
 
 export default class StatusActionBar extends AppComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            ...this.state
+        }
     }
-
-
 
     render() {
         if (this.props.visible == false || this.state.visible == false) return null;
 
         return (
-            <View style={[styles.container, {width: this.state.screenWidth}]} {...this.props} >
+            <View style={[styles.container, { width: this.state.screenWidth }]} {...this.props} >
                 <TouchableOpacity onPress={this.props.onSavePress} >
                     <View style={styles.iconContainer} >
                         <Icon size={30} color={'white'} name={'save'} />

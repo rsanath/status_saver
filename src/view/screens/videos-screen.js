@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import {
-    StatusBar,
     FlatList,
     View,
-    Text,
     TouchableOpacity,
     Dimensions,
-    ImageBackground,
-    Modal
+    ImageBackground
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-// import Modal from "react-native-modal";
 
 import AppComponent from '../app-component';
+import StatusVideoPlayer from './status-video-player';
+
 import { requestStoragePermission } from '../../helpers/permissions-helper';
 import { getVideoStatuses, isWhatsappInstalled } from '../../helpers/whatsapp-helper';
 import { shareVideo } from '../../helpers/app-helper';
-
-import StatusVideoPlayer from './status-video-player';
+import C from '../../constants';
 
 
 export default class VideoScreen extends AppComponent {
@@ -34,6 +31,9 @@ export default class VideoScreen extends AppComponent {
     async componentDidMount() {
         if (await requestStoragePermission() && await isWhatsappInstalled()) {
             this.setState({ statuses: await getVideoStatuses() })
+            setInterval(async () => {
+                this.setState({ statuses: await getVideoStatuses() })
+            }, C.whatsAppStatusRefreshRate)
         }
     }
 
