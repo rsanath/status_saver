@@ -55,7 +55,7 @@ export const shareVideo = (path, message = '') => {
 
 export const shareVideos = (videos, message = '') => {
     try {
-        NativeModules.ImageShareModule.shareVideo(videos, message);
+        NativeModules.ImageShareModule.shareVideos(videos, message);
     } catch (e) {
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
     }

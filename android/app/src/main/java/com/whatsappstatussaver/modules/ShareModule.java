@@ -86,7 +86,7 @@ public class ShareModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void shareVideos(ReadableArray uriToVideos, String message) {
-        Activity context = getCurrentActivity();    
+        Activity context = getCurrentActivity();
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND_MULTIPLE);
@@ -96,7 +96,7 @@ public class ShareModule extends ReactContextBaseJavaModule {
         ArrayList<Uri> files = new ArrayList<Uri>();
 
         for (int i = 0; i < uriToVideos.size(); i++) {
-            File file = new File(uriToVideos.getString(i));
+            File file = new File(uriToVideos    .getString(i));
             Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", file);
             files.add(uri);
         }

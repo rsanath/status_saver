@@ -7,12 +7,12 @@ export default class HighlightableView extends Component {
         this.state = {};
     }
 
-    highlight = () =>  {
-        this.setState({highlight: false})
+    highlight = () => {
+        this.setState({ highlight: false })
     }
 
     unhighlight = () => {
-        this.setState({highlight: false})
+        this.setState({ highlight: false })
     }
 
     render() {
@@ -27,9 +27,9 @@ export default class HighlightableView extends Component {
                                 height: '100%',
                                 position: 'absolute',
                                 top: 0,
-                                backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                borderWidth: 1,
-                                borderColor: this.props.highlightColor || 'powderblue',
+                                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                borderWidth: 3,
+                                borderColor: this.props.highlightColor || '#00887a',
                                 ...this.props.style
                             }} />
                         ) : null
