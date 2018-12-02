@@ -20,7 +20,9 @@ export default class ImageViewer extends AppComponent {
         return this.props.images.map(source => {
             const onPress = this.props.onPressImage ? () => this.props.onPressImage(source) : null
             return (
-                <TouchableWithoutFeedback onPress={onPress} >
+                <TouchableWithoutFeedback
+                    key={source}
+                    onPress={onPress} >
                     <Image
                         resizeMode={'contain'}
                         style={{ width: this.state.screenWidth, height: this.state.screenHeight }}

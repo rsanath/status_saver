@@ -9,8 +9,10 @@ import android.support.v4.content.FileProvider;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class ShareModule extends ReactContextBaseJavaModule {
@@ -43,6 +45,28 @@ public class ShareModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void shareImages(ReadableArray uriToImages, String message) {
+        Activity context = getCurrentActivity();
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        intent.putExtra(Intent.EXTRA_SUBJECT, message);
+        intent.setType("image/jpeg");
+
+        ArrayList<Uri> files = new ArrayList<Uri>();
+
+        for (int i = 0; i < uriToImages.size(); i++) {
+            File file = new File(uriToImages.getString(i));
+            Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", file);
+            files.add(uri);
+        }
+
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+
+        context.startActivity(intent);
+    }
+
+    @ReactMethod
     public void shareVideo(String uriToImage, String message) {
         Activity context = getCurrentActivity();
 
@@ -56,6 +80,28 @@ public class ShareModule extends ReactContextBaseJavaModule {
                 .setChooserTitle("Share via")
                 .createChooserIntent()
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        context.startActivity(intent);
+    }
+
+    @ReactMethod
+    public void shareVideos(ReadableArray uriToVideos, String message) {
+        Activity context = getCurrentActivity();    
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        intent.putExtra(Intent.EXTRA_SUBJECT, message);
+        intent.setType("video/mp4");
+
+        ArrayList<Uri> files = new ArrayList<Uri>();
+
+        for (int i = 0; i < uriToVideos.size(); i++) {
+            File file = new File(uriToVideos.getString(i));
+            Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", file);
+            files.add(uri);
+        }
+
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
 
         context.startActivity(intent);
     }

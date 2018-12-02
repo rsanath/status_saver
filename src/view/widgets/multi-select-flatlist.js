@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { BackHandler, View, TouchableWithoutFeedback, Vibration } from 'react-native';
+import { BackHandler, TouchableWithoutFeedback, Vibration } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import PropTypes from 'prop-types';
+
 import HighlightableView from './highlightable-view';
 
 
@@ -21,6 +23,16 @@ const remove = (arr, val) => {
     return arr;
 }
 
+const isEqual = (arr1, arr2) => {
+    if (arr1.length != arr2.length) return false;
+    for (let i in arr1) {
+        if (arr1[i] != arr2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 export default class MultiSelectFlatlist extends Component {
     constructor(props) {
         super(props);
@@ -32,20 +44,23 @@ export default class MultiSelectFlatlist extends Component {
     }
 
     _onBackButtonPressAndroid = () => {
-        console.log('back button. exit multiselect')
         this.props.onCancelMultiSelect && this.props.onCancelMultiSelect()
-        this._exitMultiSelectMode()
-        return true
+        if (this.state.multiSelectMode) {
+            this._exitMultiSelectMode()
+            return true
+        } else {
+            return false
+        }
+
     }
 
     _exitMultiSelectMode = () => {
-        console.log('multi select mdoe OFF')
+        this.props.onExitMultiSelectMode && this.props.onExitMultiSelectMode()
         this.setState({ multiSelectMode: false, selectedIndexes: [] })
     }
 
     _enterMultiSelectMode = () => {
-        Vibration.vibrate(100)
-        console.log('multi select mdoe ON')
+        this.props.onEnterMultiSelectMode && this.props.onEnterMultiSelectMode()
         this.setState({ multiSelectMode: true })
     }
 
@@ -57,26 +72,28 @@ export default class MultiSelectFlatlist extends Component {
         }
     }
 
-    _onPressItemInMultiSelectMode = index => {
-        if (contains(this.state.selectedIndexes, index)) {
-            this.setState(state => {
-                return {
-                    selectedIndexes: remove(state.selectedIndexes, index)
-                }
-            })
-        } else {
-            Vibration.vibrate(10)
-            this.setState(state => {
-                return {
-                    selectedIndexes: [...state.selectedIndexes, index]
-                }
-            })
-        }
-    }
-
     _onLongPress = item => {
         if (!this.state.multiSelectMode) this._enterMultiSelectMode();
         this._onPressItemInMultiSelectMode(item.index)
+    }
+
+    _onPressItemInMultiSelectMode = index => {
+        let newList = []
+        if (contains(this.state.selectedIndexes, index)) {
+            // selecting the already selected item. so unselect it
+            if (this.state.selectedIndexes.length == 1) {
+                // if that was the only slected item. exit multiselect mode
+                this._exitMultiSelectMode()
+            } else {
+                newList = remove(this.state.selectedIndexes, index)
+            }
+        } else {
+            // selecting the item for first time. add to selected list
+            Vibration.vibrate(10)
+            newList = [...this.state.selectedIndexes, index]
+        }
+        this.props.onSelectionChange && this.props.onSelectionChange(newList)
+        this.setState({ selectedIndexes: newList })
     }
 
     _renderItem = (item) => {
@@ -85,6 +102,7 @@ export default class MultiSelectFlatlist extends Component {
                 onPress={() => this._onPress(item)}
                 onLongPress={() => this._onLongPress(item)} >
                 <HighlightableView
+                    style={this.props.highlightStyle}
                     highlight={this.state.multiSelectMode && contains(this.state.selectedIndexes, item.index)}>
                     {this.props.renderItem(item)}
                 </HighlightableView>
@@ -106,6 +124,12 @@ export default class MultiSelectFlatlist extends Component {
         BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPressAndroid)
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!isEqual(this.state.selectedIndexes, prevState.selectedIndexes)) {
+            this.props.onSelectionChange && this.props.onSelectionChange(this.state.selectedIndexes)
+        }
+    }
+
     render() {
         return (
             <FlatList
@@ -115,4 +139,13 @@ export default class MultiSelectFlatlist extends Component {
             />
         );
     }
+}
+
+MultiSelectFlatlist.propTypes = {
+    onPressItem: PropTypes.func,
+    onEnterMultiSelectMode: PropTypes.func,
+    onExitMultiSelectMode: PropTypes.func,
+    onSelectionChange: PropTypes.func,
+    onCancelMultiSelect: PropTypes.func,
+    highlightStyle: PropTypes.object
 }

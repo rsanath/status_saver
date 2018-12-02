@@ -30,6 +30,7 @@ export default class HighlightableView extends Component {
                                 backgroundColor: 'rgba(255, 255, 255, 0.5)',
                                 borderWidth: 1,
                                 borderColor: this.props.highlightColor || 'powderblue',
+                                ...this.props.style
                             }} />
                         ) : null
                 }
