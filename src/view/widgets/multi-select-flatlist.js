@@ -110,7 +110,7 @@ export default class MultiSelectFlatlist extends Component {
         )
     }
 
-    getSelectedIndexed = () => {
+    getSelectedIndexes = () => {
         return this.state.selectedIndexes
     }
 

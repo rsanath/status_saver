@@ -1,31 +1,41 @@
-import React, { Component } from 'react';
-import { View, Modal, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Modal, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import PropTypes from 'prop-types';
 
 import AppComponent from '../app-component';
+import VideoPlayer from '../widgets/video-player';
 
 
-export default class ImageViewer extends AppComponent {
+export default class VideoViewer extends AppComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            ...this.state,
+            showActions: true
+        }
+    }
 
     onIndexChanged = index => {
         this.setState({ index })
         this.props.onIndexChanged && this.props.onIndexChanged(index)
     }
 
-    getImages = () => {
+    getVideos = () => {
+        return this.props.videos.map((source, index) => {
+            const onPress = () => {
+                this.props.onPressVideo && this.props.onPressVideo(index)
+                this.setState({ showActions: !this.state.showActions })
+            }
 
-        return this.props.images.map(source => {
-            const onPress = this.props.onPressImage ? () => this.props.onPressImage(source) : null
+            if (this.props.index != index) return null;
+
             return (
-                <TouchableWithoutFeedback
-                    key={source}
-                    onPress={onPress} >
-                    <Image
-                        resizeMode={'contain'}
-                        style={{ width: this.state.screenWidth, height: this.state.screenHeight }}
-                        source={{ uri: source }} />
-                </TouchableWithoutFeedback>
+                <VideoPlayer
+                    paused={this.props.index != index}
+                    onPressVideo={onPress}
+                    video={{ uri: source }} />
             )
         })
     }
@@ -46,7 +56,7 @@ export default class ImageViewer extends AppComponent {
     }
 
     renderFooter = () => {
-        if (!this.props.renderFooter) return null;
+        if (!this.props.renderFooter || !this.state.showActions) return null;
 
         return (
             <View style={{ position: 'absolute', bottom: 0 }} >
@@ -60,32 +70,24 @@ export default class ImageViewer extends AppComponent {
             <Modal
                 onRequestClose={this.props.onRequestClose}
                 visible={this.props.visible} >
-                <View style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }} >
+                <View style={{ flex: 1 }} >
                     {this.renderHeader()}
                     <Swiper
-                        style={{
-                            marginTop: -15,
-                            padding: 0,
-                        }}
+                        loadMinimal={true}
                         ref={'swiper'}
                         showsPagination={false}
-                        width={this.state.screenWidth}
-                        height={this.state.screenHeight}
+                        width={this.screenWidth}
+                        height={this.screenHeight}
                         containerStyle={styles.containerStyle}
                         loop={this.props.loop || false}
                         onIndexChanged={this.onIndexChanged}
                         index={this.props.index || 0}
                         showsButtons={false}>
-                        {this.getImages()}
+                        {this.getVideos()}
                     </Swiper>
                     {this.renderFooter()}
                 </View>
             </Modal>
-
         );
     }
 }
@@ -95,4 +97,11 @@ const styles = {
         flex: 1,
         backgroundColor: 'black'
     }
+}
+
+VideoViewer.propTypes = {
+    autoPlay: PropTypes.bool,
+    videos: PropTypes.arrayOf(PropTypes.string).isRequired,
+    visible: PropTypes.bool.isRequired,
+    footerComponent: PropTypes.object
 }

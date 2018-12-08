@@ -8,9 +8,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import AppComponent from '../app-component';
-import StatusVideoPlayer from './status-video-player';
 import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
+import VideoViewer from '../widgets/video-viewer';
+import StatusActionBar from '../widgets/status-actionbar';
 
 import { requestStoragePermission } from '../../helpers/permissions-helper';
 import { getVideoStatuses, isWhatsappInstalled, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
@@ -91,17 +92,30 @@ export default class VideoScreen extends AppComponent {
             ) : null
     }
 
-    render() {
+    renderFooter = () => {
+        const status = this.getViewingStatus()
+        return (
+            <StatusActionBar
+                visible={true}
+                onSavePress={() => saveWhatsAppStatus(status)}
+                onSharePress={() => shareVideo(status)}
+            />
+        )
+    }
 
+    render() {
         return (
             <View style={this.theme.containers.screen}>
-                <StatusVideoPlayer
-                    visible={this.state.showModal}
+                <VideoViewer
+                    onPressVideo={() => this.setState(state => ({ showActions: !state.showActions }))}
+                    renderFooter={this.renderFooter}
+                    index={this.state.currentIndex}
+                    onIndexChanged={currentIndex => this.setState({ currentIndex })}
                     onRequestClose={() => this.setState({ showModal: false })}
-                    onSharePress={() => shareVideo(this.getViewingStatus())}
-                    onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
-                    video={{ uri: this.state.statuses[this.state.currentIndex] }}
+                    visible={this.state.showModal}
+                    videos={this.state.statuses.map(img => 'file://' + img)}
                 />
+
                 <MultiSelectFlatlist
                     ref={'multiSelectList'}
                     style={{ marginTop: this.state.multiSelectMode ? 54 : 0 }}
