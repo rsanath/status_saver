@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    FlatList,
     View,
     StatusBar,
     Dimensions,
@@ -14,7 +13,7 @@ import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
 
 import { requestStoragePermission } from '../../helpers/permissions-helper';
-import { getVideoStatuses, isWhatsappInstalled, saveWhatsAppStatuses } from '../../helpers/whatsapp-helper';
+import { getVideoStatuses, isWhatsappInstalled, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
 import { shareVideo, shareVideos } from '../../helpers/app-helper';
 import C from '../../constants';
 

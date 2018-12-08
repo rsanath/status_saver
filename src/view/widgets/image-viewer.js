@@ -17,6 +17,7 @@ export default class ImageViewer extends AppComponent {
     }
 
     getImages = () => {
+
         return this.props.images.map(source => {
             const onPress = this.props.onPressImage ? () => this.props.onPressImage(source) : null
             return (
