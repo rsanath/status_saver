@@ -18,6 +18,9 @@ import { requestStoragePermission } from '../../helpers/permissions-helper';
 import { getPhotoStatuses, saveWhatsAppStatus, saveWhatsAppStatuses } from '../../helpers/whatsapp-helper';
 import { shareImage, shareImages } from '../../helpers/app-helper';
 import C from '../../constants';
+import App from '../../../App';
+import SwitchView from '../widgets/switch-view';
+import NoStatusWidget from '../widgets/no-status-widget';
 
 
 
@@ -111,6 +114,7 @@ class ImagesScreen extends AppComponent {
     }
 
     render() {
+
         return (
             <View style={this.theme.containers.screen}>
 
@@ -125,14 +129,20 @@ class ImagesScreen extends AppComponent {
                     images={this.state.statuses.map(img => 'file://' + img)}
                 />
 
+                <SwitchView visible={this.state.statuses.length <= 0} >
+                    <NoStatusWidget />
+                </SwitchView>
+
                 <MultiSelectFlatlist
                     ref={'multiSelectList'}
                     style={{ marginTop: this.state.multiSelectMode ? 54 : 0 }}
                     onExitMultiSelectMode={() => {
+                        App.titleBar().toggleMultiSelectMode(false)
                         this.setState({ multiSelectMode: false })
                         this.props.navigation.setParams({ hideTabBar: false });
                     }}
                     onEnterMultiSelectMode={() => {
+                        App.titleBar().toggleMultiSelectMode(true)
                         this.setState({ multiSelectMode: true })
                         this.props.navigation.setParams({ hideTabBar: true });
                     }}

@@ -1,8 +1,9 @@
 import React from 'react';
-import { ToastAndroid, Dimensions } from 'react-native';
+import { ToastAndroid, Dimensions, Linking } from 'react-native';
 import { checkAndCreateDir } from './file-system-helper';
 import { NativeModules } from 'react-native'
 import { t } from '../i18n/i18n';
+import { get } from '../firebase';
 
 const RNFetchBlob = require('rn-fetch-blob').default
 const fs = RNFetchBlob.fs
@@ -64,4 +65,12 @@ export const shareVideos = (videos, message = '') => {
 export const getHeightForFullWidth = (imgWidth, imgHeight) => {
     let { width } = Dimensions.get('window');
     return width * (imgHeight / imgWidth);
+}
+
+export const sendMail = (to, sub = '', body = '') => {
+    Linking.openURL(`mailto:${to}`)
+}
+
+export const getSupportEmail = async () => {
+    return await get('/support/supportEmail')
 }

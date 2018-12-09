@@ -6,8 +6,12 @@ firebase.initializeApp(config.firebase);
 
 let _db = null;
 
-export const db = (path = '') => {
+export const db = () => {
     if (!_db) (_db = firebase.database())
+    return _db
+}
 
-    return _db.ref(config.routes.appRoute + path);
+export const get = path => {
+    return db().ref(path).once('value')
+        .then(snapshot => snapshot.val())
 }

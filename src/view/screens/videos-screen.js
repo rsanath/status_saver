@@ -19,6 +19,9 @@ import { requestStoragePermission } from '../../helpers/permissions-helper';
 import { getVideoStatuses, isWhatsappInstalled, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
 import { shareVideo, shareVideos } from '../../helpers/app-helper';
 import C from '../../constants';
+import App from '../../../App';
+import NoStatusWidget from '../widgets/no-status-widget';
+import SwitchView from '../widgets/switch-view';
 
 
 class VideoScreen extends AppComponent {
@@ -128,14 +131,20 @@ class VideoScreen extends AppComponent {
                     videos={this.state.statuses.map(img => 'file://' + img)}
                 />
 
+                <SwitchView visible={this.state.statuses.length <= 0} >
+                    <NoStatusWidget />
+                </SwitchView>
+
                 <MultiSelectFlatlist
                     ref={'multiSelectList'}
                     style={{ marginTop: this.state.multiSelectMode ? 54 : 0 }}
                     onExitMultiSelectMode={() => {
+                        App.titleBar().toggleMultiSelectMode(false)
                         this.setState({ multiSelectMode: false })
                         this.props.navigation.setParams({ hideTabBar: false });
                     }}
                     onEnterMultiSelectMode={() => {
+                        App.titleBar().toggleMultiSelectMode(true)
                         this.setState({ multiSelectMode: true })
                         this.props.navigation.setParams({ hideTabBar: true });
                     }}

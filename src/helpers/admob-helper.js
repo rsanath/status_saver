@@ -1,10 +1,9 @@
-import { db } from '../firebase'
+import { get } from '../firebase'
+import config from '../../config';
 
 export const shouldShowAd = async () => {
-    return db('/config/ads').once('value')
-        .then(snapshot => snapshot.val())
-        .then(val => val.showAds)
-        .catch(error => {
+    return get(config.routes.appRoute + '/config/ads')
+        .catch(e => {
             console.log(error)
             return false
         })

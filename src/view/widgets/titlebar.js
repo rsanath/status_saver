@@ -5,6 +5,7 @@ import IconButton from './icon-button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import SwitchView from './switch-view';
+import theme from '../theme/theme';
 
 
 
@@ -12,6 +13,9 @@ export default class TitleBar extends Component {
     constructor(props) {
         super(props);
         this.iconSize = 26
+        this.state = {
+            multiSelectMode: false
+        }
     }
 
     getMenuList = () => {
@@ -34,6 +38,10 @@ export default class TitleBar extends Component {
         })
     }
 
+    toggleMultiSelectMode = val => {
+        this.setState({ multiSelectMode: val })
+    }
+
     getActions = () => {
         return this.props.actions.map(item => {
             return (
@@ -54,26 +62,28 @@ export default class TitleBar extends Component {
                 style={[
                     styles.container,
                     this.props.containerStyle,
-                    { backgroundColor: this.props.backgroundColor }
-                ]} >
+                    { backgroundColor: this.state.multiSelectMode ? theme.colors.secondary : this.props.backgroundColor }
+                ]}>
                 <Text style={[styles.title, { color: this.props.foregroundColor }]} >{this.props.title}</Text>
 
                 <View style={{ flex: 1 }} />
 
-                {this.getActions()}
+                <SwitchView visible={!this.state.multiSelectMode} >
+                    {this.getActions()}
 
-                <SwitchView visible={this.props.menu.length > 0} >
-                    <Menu>
-                        <MenuTrigger>
-                            <Icon
-                                size={this.iconSize}
-                                name={'dots-vertical'}
-                                color={this.props.foregroundColor} />
-                        </MenuTrigger>
-                        <MenuOptions>
-                            {this.getMenuList()}
-                        </MenuOptions>
-                    </Menu>
+                    <SwitchView visible={this.props.menu.length > 0} >
+                        <Menu>
+                            <MenuTrigger>
+                                <Icon
+                                    size={this.iconSize}
+                                    name={'dots-vertical'}
+                                    color={this.props.foregroundColor} />
+                            </MenuTrigger>
+                            <MenuOptions>
+                                {this.getMenuList()}
+                            </MenuOptions>
+                        </Menu>
+                    </SwitchView>
                 </SwitchView>
             </View >
         );
@@ -115,7 +125,8 @@ TitleBar.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({
         icon: PropTypes.string.isRequired,
         onPress: PropTypes.func.isRequired
-    }))
+    })),
+    selectionMode: PropTypes.bool
 }
 
 TitleBar.defaultProps = {
