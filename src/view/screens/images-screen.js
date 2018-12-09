@@ -6,24 +6,22 @@ import {
     StatusBar
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import ImageViewer from '../widgets/image-viewer';
 import StatusActionBar from '../widgets/status-actionbar';
 import AppComponent from '../app-component';
 import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
-
-import { requestStoragePermission } from '../../helpers/permissions-helper';
-import {
-    getPhotoStatuses,
-    isWhatsappInstalled,
-    saveWhatsAppStatus,
-    saveWhatsAppStatuses
-} from '../../helpers/whatsapp-helper';
-import { shareImage, shareImages } from '../../helpers/app-helper';
-import C from '../../constants';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
 
+import { requestStoragePermission } from '../../helpers/permissions-helper';
+import { getPhotoStatuses, saveWhatsAppStatus, saveWhatsAppStatuses } from '../../helpers/whatsapp-helper';
+import { shareImage, shareImages } from '../../helpers/app-helper';
+import C from '../../constants';
 
-export default class ImagesScreen extends AppComponent {
+
+
+class ImagesScreen extends AppComponent {
     static navigationOptions = ({ navigation }) => {
         return {
             tabBarVisible: (navigation.state.params && !navigation.state.params.hideTabBar),
@@ -42,14 +40,8 @@ export default class ImagesScreen extends AppComponent {
         selectedItems: []
     }
 
-    async componentDidMount() {
-        if (await requestStoragePermission() && await isWhatsappInstalled()) {
-            this.setState({ statuses: await getPhotoStatuses() })
-            setInterval(async () => {
-                if (this.state.multiSelectMode) return;
-                this.setState({ statuses: await getPhotoStatuses() })
-            }, C.whatsAppStatusRefreshRate)
-        }
+    fetchStatuses = async () => {
+        this.setState({ statuses: await getPhotoStatuses(this.props.statusPath) })
     }
 
     renderPhoto({ item, index }) {
@@ -102,6 +94,22 @@ export default class ImagesScreen extends AppComponent {
             ) : null
     }
 
+    async componentDidMount() {
+        if (await requestStoragePermission()) {
+            this.fetchStatuses()
+            setInterval(async () => {
+                if (this.state.multiSelectMode) return;
+                this.fetchStatuses()
+            }, C.whatsAppStatusRefreshRate)
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.statusPath !== this.props.statusPath) {
+            this.fetchStatuses()
+        }
+    }
+
     render() {
         return (
             <View style={this.theme.containers.screen}>
@@ -146,3 +154,7 @@ export default class ImagesScreen extends AppComponent {
         );
     }
 }
+
+const mapStateToProps = ({ status }) => ({ ...status });
+
+export default connect(mapStateToProps)(ImagesScreen);

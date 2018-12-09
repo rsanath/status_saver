@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import { connect } from 'react-redux';
+
 import AppComponent from '../app-component';
 import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
@@ -19,7 +21,7 @@ import { shareVideo, shareVideos } from '../../helpers/app-helper';
 import C from '../../constants';
 
 
-export default class VideoScreen extends AppComponent {
+class VideoScreen extends AppComponent {
     static navigationOptions = ({ navigation }) => {
         return {
             tabBarVisible: (navigation.state.params && !navigation.state.params.hideTabBar),
@@ -36,15 +38,6 @@ export default class VideoScreen extends AppComponent {
         statuses: [],
         multiSelectMode: false,
         selectedItems: []
-    }
-
-    async componentDidMount() {
-        if (await requestStoragePermission() && await isWhatsappInstalled()) {
-            this.setState({ statuses: await getVideoStatuses() })
-            setInterval(async () => {
-                this.setState({ statuses: await getVideoStatuses() })
-            }, C.whatsAppStatusRefreshRate)
-        }
     }
 
     renderVideoThumbnail({ item, index }) {
@@ -103,6 +96,25 @@ export default class VideoScreen extends AppComponent {
         )
     }
 
+    fetchStatuses = async () => {
+        this.setState({ statuses: await getVideoStatuses(this.props.statusPath) })
+    }
+
+    async componentDidMount() {
+        if (await requestStoragePermission()) {
+            this.fetchStatuses()
+            setInterval(async () => {
+                this.fetchStatuses()
+            }, C.whatsAppStatusRefreshRate)
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.statusPath !== this.props.statusPath) {
+            this.fetchStatuses()
+        }
+    }
+
     render() {
         return (
             <View style={this.theme.containers.screen}>
@@ -144,3 +156,7 @@ export default class VideoScreen extends AppComponent {
         );
     }
 }
+
+const mapStateToProps = ({ status }) => ({ ...status });
+
+export default connect(mapStateToProps)(VideoScreen);

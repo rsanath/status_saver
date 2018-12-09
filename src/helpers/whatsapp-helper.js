@@ -4,28 +4,20 @@ import { copyFile, toast, copyFiles } from './app-helper';
 const RNFetchBlob = require('rn-fetch-blob').default
 const fs = RNFetchBlob.fs
 
-const whatappStatusDir = '/sdcard/WhatsApp/Media/.Statuses'
-const GBWhatsAppStatusDir = '/sdcard/GBWhatsApp/Media/.Statuses'
-const whatsAppBusinessStatusDir = '/sdcard/WhatsApp\ Business/Media/.Statuses'
-
-export const getStatuses = () => {
-    return fs.lstat(whatappStatusDir)
+export const getStatuses = path => {
+    return fs.lstat(path)
         .then(files => sortByLatestFirst(files))
         .then(files => files.map(file => file.path))
         .catch(() => [])
 }
 
-export const isWhatsappInstalled = async () => {
-    return (await fs.exists(whatappStatusDir)) && (await fs.isDir(whatappStatusDir))
-}
-
-export const getPhotoStatuses = async () => {
-    const statuses = await getStatuses()
+export const getPhotoStatuses = async path => {
+    const statuses = await getStatuses(path)
     return statuses.filter(status => isPhoto(status))
 }
 
-export const getVideoStatuses = async () => {
-    const statuses = await getStatuses()
+export const getVideoStatuses = async path => {
+    const statuses = await getStatuses(path)
     return statuses.filter(status => isVideo(status))
 }
 
@@ -35,7 +27,7 @@ const isPhoto = file => {
     return ext == 'jpg'
 }
 
-const isVideo = file => { 
+const isVideo = file => {
     const parts = file.split('.')
     const ext = parts[parts.length - 1]
     return ext == 'mp4'

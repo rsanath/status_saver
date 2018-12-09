@@ -33,6 +33,7 @@ export default class VideoViewer extends AppComponent {
 
             return (
                 <VideoPlayer
+                    key={source}
                     paused={this.props.index != index}
                     onPressVideo={onPress}
                     video={{ uri: source }} />
