@@ -28,8 +28,6 @@ public class ShareModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void shareImage(String uriToImage, String message) {
-        System.out.println("Path is ");
-        System.out.println(uriToImage);
         Activity context = getCurrentActivity();
 
         File cacheFile = new File(uriToImage);
