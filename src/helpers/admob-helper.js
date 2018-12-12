@@ -2,11 +2,17 @@ import { get } from '../firebase'
 import config from '../../config';
 import { notifyError } from './bugsnag-helper';
 
-export const shouldShowAd = async () => {
+export const getAdConfig = () => {
     return get(config.routes.appRoute + '/config/ads')
-        .then(config => config.showAds)
-        .catch(e => {
+        .catch(error => {
             notifyError(error)
-            return false
+            return DeafultAdConfig
         })
+}
+
+export const DeafultAdConfig = {
+    showAds: false,
+    bottomBannerAd: {
+        showAd: false
+    }
 }

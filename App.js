@@ -31,7 +31,7 @@ export default class App extends AppComponent {
     super(props)
     this.state = {
       ...this.state,
-      showAds: false,
+      adConfig: ads.DeafultAdConfig,
       isModalVisible: false
     }
   }
@@ -47,8 +47,8 @@ export default class App extends AppComponent {
   }
 
   async componentDidMount() {
-    const showAds = await ads.shouldShowAd()
-    this.setState({ showAds })
+    const adConfig = await ads.getAdConfig()
+    this.setState({ adConfig })
     _titleBar = this.refs.titlebar
   }
 
@@ -58,6 +58,9 @@ export default class App extends AppComponent {
   }
 
   render() {
+    const { adConfig } = this.state
+    console.log(adConfig)
+
     return (
       <MenuProvider>
         <Provider store={store}>
@@ -106,10 +109,10 @@ export default class App extends AppComponent {
             <AppNavigator />
 
             <SwitchView
-              visible={this.state.showAds && this.state.orientation != 'landscape'} >
+              visible={adConfig.showAds && adConfig.bottomBannerAd.showAd && this.state.orientation != 'landscape'} >
               <AdMobBanner
                 adSize="fullBanner"
-                adUnitID={config.admob.adUnitId}
+                adUnitID={adConfig.bottomBannerAd.adUnitId}
                 testDeviceID={config.admob.testDeviceId}
               />
             </SwitchView>
