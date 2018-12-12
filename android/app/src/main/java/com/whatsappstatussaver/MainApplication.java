@@ -2,29 +2,16 @@ package com.whatsappstatussaver;
 
 import android.app.Application;
 
-import com.whatsappstatussaver.modules.SharePackage;
+import com.whatsappstatussaver.modules.fs.FileSystemPackage;
+import com.whatsappstatussaver.modules.share.SharePackage;
 
 import com.facebook.react.ReactApplication;
-import com.RNFetchBlob.RNFetchBlobPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.sbugert.rnadmob.RNAdMobPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.brentvatne.react.ReactVideoPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.brentvatne.react.ReactVideoPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.brentvatne.react.ReactVideoPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.brentvatne.react.ReactVideoPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -45,14 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNDeviceInfo(),
             new RNAdMobPackage(),
             new RNGestureHandlerPackage(),
             new RNI18nPackage(),
-            new RNFetchBlobPackage(),
             new VectorIconsPackage(),
             new ReactVideoPackage(),
-            new SharePackage()
-      );
+            new SharePackage(),
+            new FileSystemPackage());
     }
 
     @Override

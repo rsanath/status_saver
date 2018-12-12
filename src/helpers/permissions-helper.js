@@ -10,14 +10,9 @@ export async function requestStoragePermission() {
         message: t('perissionDescription')
       }
     )
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the Storage")
-    } else {
-      console.log("Storage permission denied")
-    }
     return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
-    console.warn(err)
+    notifyError(err)
     return false;
   }
 }

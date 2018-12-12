@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator, createAppContainer, createStackNavigator } from "react-navigation";
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ImagesScreen from "./images-screen";
 import VideosScreen from "./videos-screen";
@@ -14,14 +14,14 @@ const StatusNavigator = createMaterialTopTabNavigator({
         screen: ImagesScreen,
         navigationOptions: {
             title: 'Photos',
-            tabBarIcon: <Icon size={22} color={theme.colors.accent} name={'camera-alt'} />
+            tabBarIcon: <Icon size={25} color={theme.colors.accent} name={'camera'} />
         }
     },
     Videos: {
         screen: VideosScreen,
         navigationOptions: {
             title: 'Videos',
-            tabBarIcon: <Icon size={23} color={theme.colors.accent} name={'videocam'} />
+            tabBarIcon: <Icon size={27} color={theme.colors.accent} name={'video'} />
         }
     }
 }, {

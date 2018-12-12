@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Modal, TouchableOpacity } from 'react-native';
+import { View, Modal } from 'react-native';
 import Swiper from 'react-native-swiper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
 
 import AppComponent from '../app-component';
 import VideoPlayer from '../widgets/video-player';
+import SwitchView from './switch-view';
 
 
 export default class VideoViewer extends AppComponent {
@@ -41,38 +41,12 @@ export default class VideoViewer extends AppComponent {
         })
     }
 
-    renderHeader = () => {
-        return (
-            <View style={{
-                position: 'absolute',
-                top: 0,
-                flexDirection: 'row',
-            }} >
-                <View style={{ flex: 1 }} />
-                <TouchableOpacity onPress={this.props.onRequestClose} >
-                    <Icon name={'close'} color={'white'} size={25} />
-                </TouchableOpacity>
-            </View>
-        )
-    }
-
-    renderFooter = () => {
-        if (!this.props.renderFooter || !this.state.showActions) return null;
-
-        return (
-            <View style={{ position: 'absolute', bottom: 0 }} >
-                {this.props.renderFooter()}
-            </View>
-        )
-    }
-
     render() {
         return (
             <Modal
                 onRequestClose={this.props.onRequestClose}
                 visible={this.props.visible} >
                 <View style={{ flex: 1 }} >
-                    {this.renderHeader()}
                     <Swiper
                         loadMinimal={true}
                         ref={'swiper'}
@@ -86,7 +60,19 @@ export default class VideoViewer extends AppComponent {
                         showsButtons={false}>
                         {this.getVideos()}
                     </Swiper>
-                    {this.renderFooter()}
+
+                    <SwitchView visible={this.props.renderFooter} >
+                        <View style={styles.footer}>
+                            {this.props.renderFooter && this.props.renderFooter()}
+                        </View>
+                    </SwitchView>
+
+                    <SwitchView visible={this.props.renderHeader} >
+                        <View style={styles.header}>
+                            {this.props.renderHeader && this.props.renderHeader()}
+                        </View>
+                    </SwitchView>
+
                 </View>
             </Modal>
         );
@@ -97,6 +83,14 @@ const styles = {
     containerStyle: {
         flex: 1,
         backgroundColor: 'black'
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0
     }
 }
 

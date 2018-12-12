@@ -19,7 +19,10 @@ export default {
     },
 
     lables: {
-        sendFeedback: 'Have any feedback or query ?'
+        sendFeedback: 'Have any feedback or query ?',
+        whatsappStatus: 'WhatsApp Statuses',
+        gbWhatsappStatus: 'GBWhatsApp Statuses',
+        whatsappBusinessStatus: 'WhatsApp Business Statuses'
     },
 
     screens: {

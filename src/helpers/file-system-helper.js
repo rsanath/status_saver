@@ -1,16 +1,17 @@
-const RNFetchBlob = require('rn-fetch-blob').default
-const fs = RNFetchBlob.fs
-
-export const ls = dir => {
-    return fs.ls(dir)
-        .then(files => {
-            files.map(file => `${dir}/${file}`)
-        })
-}
+import fs from '../native-modules/file-system-module';
 
 export const checkAndCreateDir = async dir => {
     const exist = await fs.exists(dir)
-    if (!(exist && await fs.isDir(dir))) {
-        await fs.mkdir(dir)
+    
+    if (!exist) {
+        console.log('before1')
+        const isdir = await fs.isDir(dir)
+        console.log('after1')
+
+        if (!isdir) {
+            console.log('before2')
+            await fs.mkdir(dir)
+            console.log('after2')
+        }
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import AppComponent from '../app-component';
 
@@ -20,14 +20,14 @@ export default class StatusActionBar extends AppComponent {
             <View style={[styles.container, { width: this.state.screenWidth }]} {...this.props} >
                 <TouchableOpacity onPress={this.props.onSavePress} >
                     <View style={styles.iconContainer} >
-                        <Icon size={30} color={'white'} name={'save'} />
+                        <Icon size={30} color={'white'} name={'content-save'} />
                         <Text style={styles.iconTitle} >Save</Text>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={this.props.onSharePress} >
                     <View style={styles.iconContainer} >
-                        <Icon size={30} color={'white'} name={'share'} />
+                        <Icon size={30} color={'white'} name={'share-variant'} />
                         <Text style={styles.iconTitle} >Share</Text>
                     </View>
                 </TouchableOpacity>

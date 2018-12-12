@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, Modal, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AppComponent from '../app-component';
+import SwitchView from './switch-view';
 
 
 export default class ImageViewer extends AppComponent {
@@ -45,16 +46,6 @@ export default class ImageViewer extends AppComponent {
         )
     }
 
-    renderFooter = () => {
-        if (!this.props.renderFooter) return null;
-
-        return (
-            <View style={{ position: 'absolute', bottom: 0 }} >
-                {this.props.renderFooter()}
-            </View>
-        )
-    }
-
     render() {
         return (
             <Modal
@@ -65,7 +56,7 @@ export default class ImageViewer extends AppComponent {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }} >
-                    {this.renderHeader()}
+
                     <Swiper
                         style={{
                             marginTop: -15,
@@ -82,7 +73,19 @@ export default class ImageViewer extends AppComponent {
                         showsButtons={false}>
                         {this.getImages()}
                     </Swiper>
-                    {this.renderFooter()}
+
+                    <SwitchView visible={this.props.renderFooter} >
+                        <View style={styles.footer}>
+                            {this.props.renderFooter && this.props.renderFooter()}
+                        </View>
+                    </SwitchView>
+
+                    <SwitchView visible={this.props.renderHeader} >
+                        <View style={styles.header}>
+                            {this.props.renderHeader && this.props.renderHeader()}
+                        </View>
+                    </SwitchView>
+
                 </View>
             </Modal>
 
@@ -94,5 +97,13 @@ const styles = {
     containerStyle: {
         flex: 1,
         backgroundColor: 'black'
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0
     }
 }

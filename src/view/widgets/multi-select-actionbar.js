@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class MultiSelectActionBar extends Component {
     constructor(props) {
@@ -54,7 +54,7 @@ export default class MultiSelectActionBar extends Component {
                 <TouchableOpacity onPress={this.props.onSave} >
                     <Icon
                         style={defaultStyle}
-                        name={'save'}
+                        name={'content-save'}
                         color={itemColor}
                         size={iconSize} />
                 </TouchableOpacity>
@@ -62,7 +62,7 @@ export default class MultiSelectActionBar extends Component {
                 <TouchableOpacity onPress={this.props.onShare} >
                     <Icon
                         style={defaultStyle}
-                        name={'share'}
+                        name={'share-variant'}
                         color={itemColor}
                         size={iconSize} />
                 </TouchableOpacity>

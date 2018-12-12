@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, StatusBar, Modal } from 'react-native';
+import React from 'react';
+import { View, StatusBar, Modal, Button } from 'react-native';
 import { AdMobBanner } from 'react-native-admob';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider } from 'react-redux';
@@ -18,7 +18,8 @@ import * as ads from './src/helpers/admob-helper';
 import C from './src/constants';
 import store from './src/redux/store';
 import { StatusActions } from './src/redux/actions/status-actions';
-import { isLandscape } from './src/helpers/display-helper';
+import { t } from './src/i18n/i18n';
+import { notifyError } from './src/helpers/bugsnag-helper';
 
 
 let _titleBar;
@@ -51,9 +52,12 @@ export default class App extends AppComponent {
     _titleBar = this.refs.titlebar
   }
 
-  render() {
-    console.log(this.state.orientation)
+  componentDidCatch(error, info) {
+    console.warn(error)
+    notifyError(error, info)
+  }
 
+  render() {
     return (
       <MenuProvider>
         <Provider store={store}>
@@ -90,9 +94,9 @@ export default class App extends AppComponent {
               backgroundColor={theme.colors.primary}
               foregroundColor={'white'}
               menu={[
-                { name: 'WhatsApp Statuses', onSelect: () => this.changeStatusSource(C.WhatappStatusPath) },
-                { name: 'GBWhatsApp Statuses', onSelect: () => this.changeStatusSource(C.GBWhatsAppStatusPath) },
-                { name: 'WhatsApp Business Statuses', onSelect: () => this.changeStatusSource(C.WhatsAppBusinessStatusPath) },
+                { name: t('lables.whatsappStatus'), onSelect: () => this.changeStatusSource(C.WhatappStatusPath) },
+                { name: t('lables.gbWhatsappStatus'), onSelect: () => this.changeStatusSource(C.GBWhatsAppStatusPath) },
+                { name: t('lables.whatsappBusinessStatus'), onSelect: () => this.changeStatusSource(C.WhatsAppBusinessStatusPath) },
               ]}
               actions={[
                 { icon: 'help-circle-outline', onPress: () => this.setState({ isModalVisible: true, modalComponent: 'howtouse' }) }

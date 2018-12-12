@@ -1,14 +1,14 @@
 import { t } from '../i18n/i18n';
 import C from '../constants';
 import { copyFile, toast, copyFiles } from './app-helper';
-const RNFetchBlob = require('rn-fetch-blob').default
-const fs = RNFetchBlob.fs
+import { notifyError } from './bugsnag-helper';
+import fs from '../native-modules/file-system-module';
 
 export const getStatuses = path => {
     return fs.lstat(path)
         .then(files => sortByLatestFirst(files))
         .then(files => files.map(file => file.path))
-        .catch(() => [])
+        .catch(notifyError)
 }
 
 export const getPhotoStatuses = async path => {
@@ -36,13 +36,19 @@ const isVideo = file => {
 export const saveWhatsAppStatus = status => {
     copyFile(status, C.whatsAppStatusPersistPath)
         .then(() => toast(t('statusSaveSuccessMsg')))
-        .catch(e => toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString()))
+        .catch(e => {
+            notifyError(e)
+            toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString())
+        })
 }
 
 export const saveWhatsAppStatuses = statuses => {
     copyFiles(statuses, C.whatsAppStatusPersistPath)
         .then(() => toast(t('statusSaveSuccessMsg')))
-        .catch(e => toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString()))
+        .catch(e => {
+            notifyError(e)
+            toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString())
+        })
 }
 
 const sortByLatestFirst = files => {

@@ -1,12 +1,11 @@
-import React from 'react';
 import { ToastAndroid, Dimensions, Linking } from 'react-native';
 import { checkAndCreateDir } from './file-system-helper';
-import { NativeModules } from 'react-native'
+import { NativeModules } from 'react-native';
 import { t } from '../i18n/i18n';
 import { get } from '../firebase';
+import { notifyError } from './bugsnag-helper';
+import fs from '../native-modules/file-system-module';
 
-const RNFetchBlob = require('rn-fetch-blob').default
-const fs = RNFetchBlob.fs
 
 export const copyFile = async (sourcePath, destDir) => {
     await checkAndCreateDir(destDir)
@@ -34,6 +33,7 @@ export const shareImage = (path, message = '') => {
     try {
         NativeModules.ImageShareModule.shareImage(path, message);
     } catch (e) {
+        notifyError(e)
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
     }
 }
@@ -42,6 +42,7 @@ export const shareImages = (images, message = '') => {
     try {
         NativeModules.ImageShareModule.shareImages(images, message);
     } catch (e) {
+        notifyError(e)
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
     }
 }
@@ -50,6 +51,7 @@ export const shareVideo = (path, message = '') => {
     try {
         NativeModules.ImageShareModule.shareVideo(path, message);
     } catch (e) {
+        notifyError(e)
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
     }
 }
@@ -58,6 +60,7 @@ export const shareVideos = (videos, message = '') => {
     try {
         NativeModules.ImageShareModule.shareVideos(videos, message);
     } catch (e) {
+        notifyError(e)
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
     }
 }

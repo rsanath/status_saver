@@ -68,6 +68,12 @@ class ImagesScreen extends AppComponent {
         )
     }
 
+    renderHeader = () => {
+        return (
+            <View />
+        )
+    }
+
     getMultiSelectActionBar = () => {
         const onShare = () => shareImages(this.state.selectedItems)
         const onSave = () => saveWhatsAppStatuses(this.state.selectedItems)
@@ -121,6 +127,7 @@ class ImagesScreen extends AppComponent {
                 <ImageViewer
                     backgroundColor={'red'}
                     onPressImage={() => this.setState(state => ({ showActions: !state.showActions }))}
+                    renderHeader={this.renderHeader}
                     renderFooter={this.renderFooter}
                     index={this.state.currentIndex}
                     onIndexChanged={currentIndex => this.setState({ currentIndex })}
@@ -137,7 +144,7 @@ class ImagesScreen extends AppComponent {
                     ref={'multiSelectList'}
                     style={{ marginTop: this.state.multiSelectMode ? 54 : 0 }}
                     onExitMultiSelectMode={() => {
-                        App.titleBar().toggleMultiSelectMode(false)
+                        App.titleBar().toggleMultiSelectMode(false) 
                         this.setState({ multiSelectMode: false })
                         this.props.navigation.setParams({ hideTabBar: false });
                     }}
