@@ -3,7 +3,8 @@ import {
     View,
     Image,
     Dimensions,
-    StatusBar
+    StatusBar,
+    RefreshControl
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -21,6 +22,7 @@ import C from '../../constants';
 import App from '../../../App';
 import SwitchView from '../widgets/switch-view';
 import NoStatusWidget from '../widgets/no-status-widget';
+import { FlatList } from 'react-native-gesture-handler';
 
 
 
@@ -40,7 +42,8 @@ class ImagesScreen extends AppComponent {
         currentIndex: 0,
         statuses: [],
         multiSelectMode: false,
-        selectedItems: []
+        selectedItems: [],
+        refreshing: false
     }
 
     fetchStatuses = async () => {
@@ -103,6 +106,13 @@ class ImagesScreen extends AppComponent {
             ) : null
     }
 
+    onRefresh = () => {
+        console.log('refreshing')
+        this.setState({ refreshing: true })
+        this.fetchStatuses()
+            .then(() => this.setState({ refreshing: true }))
+    }
+
     async componentDidMount() {
         if (await requestStoragePermission()) {
             this.fetchStatuses()
@@ -144,7 +154,7 @@ class ImagesScreen extends AppComponent {
                     ref={'multiSelectList'}
                     style={{ marginTop: this.state.multiSelectMode ? 54 : 0 }}
                     onExitMultiSelectMode={() => {
-                        App.titleBar().toggleMultiSelectMode(false) 
+                        App.titleBar().toggleMultiSelectMode(false)
                         this.setState({ multiSelectMode: false })
                         this.props.navigation.setParams({ hideTabBar: false });
                     }}
@@ -163,6 +173,14 @@ class ImagesScreen extends AppComponent {
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
                     renderItem={this.renderPhoto.bind(this)}
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={() => {
+                                this.fetchStatuses().then(() => this.setState({ refreshing: false }))
+                            }}
+                            refreshing={this.state.refreshing}
+                        />
+                    }
                 />
 
                 {this.getMultiSelectActionBar()}

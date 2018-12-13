@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     View,
     StatusBar,
     Dimensions,
-    ImageBackground
+    ImageBackground,
+    RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -40,7 +41,8 @@ class VideoScreen extends AppComponent {
         currentIndex: 0,
         statuses: [],
         multiSelectMode: false,
-        selectedItems: []
+        selectedItems: [],
+        refreshing: false
     }
 
     renderVideoThumbnail({ item, index }) {
@@ -103,6 +105,12 @@ class VideoScreen extends AppComponent {
         this.setState({ statuses: await getVideoStatuses(this.props.statusPath) })
     }
 
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.fetchStatuses()
+            .then(() => this.setState({ refreshing: true }))
+    }
+
     async componentDidMount() {
         if (await requestStoragePermission()) {
             this.fetchStatuses()
@@ -158,6 +166,14 @@ class VideoScreen extends AppComponent {
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
                     renderItem={this.renderVideoThumbnail.bind(this)}
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={() => {
+                                this.fetchStatuses().then(() => this.setState({ refreshing: false }))
+                            }}
+                            refreshing={this.state.refreshing}
+                        />
+                    }
                 />
 
                 {this.getMultiSelectActionBar()}

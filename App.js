@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StatusBar, Modal, Button } from 'react-native';
-import { AdMobBanner } from 'react-native-admob';
+import { View, StatusBar, Modal, BackHandler } from 'react-native';
+import { AdMobBanner, AdMobInterstitial } from 'react-native-admob';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider } from 'react-redux';
 
@@ -49,7 +49,14 @@ export default class App extends AppComponent {
   async componentDidMount() {
     const adConfig = await ads.getAdConfig()
     this.setState({ adConfig })
-    _titleBar = this.refs.titlebar
+    _titleBar = this.refs.titlebar // globalize a ref to title bar to make it accessable in status screens
+
+    this.preLoadAd(adConfig)
+    BackHandler.addEventListener('hardwareBackPress', this.showAd);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.showAd);
   }
 
   componentDidCatch(error, info) {
@@ -57,9 +64,27 @@ export default class App extends AppComponent {
     notifyError(error, info)
   }
 
+  preLoadAd = (adConfig) => {
+    if (adConfig.showAds && adConfig.appCloseAd.showAd) {
+      AdMobInterstitial.setAdUnitID(adConfig.appCloseAd.adUnitId);
+      AdMobInterstitial.setTestDeviceID(config.admob.testDeviceId);
+      AdMobInterstitial.requestAd();
+    }
+  }
+
+  showAd = () => {
+    const { adConfig } = this.state
+    const showAd = adConfig.showAds && adConfig.appCloseAd.showAd
+
+    AdMobInterstitial.isReady(ready => {
+      if (ready && showAd) AdMobInterstitial.showAd();
+    })
+
+    return false
+  }
+
   render() {
     const { adConfig } = this.state
-    console.log(adConfig)
 
     return (
       <MenuProvider>

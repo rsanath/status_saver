@@ -14,5 +14,8 @@ export const DeafultAdConfig = {
     showAds: false,
     bottomBannerAd: {
         showAd: false
+    },
+    appCloseAd: {
+        showAd: false
     }
 }
