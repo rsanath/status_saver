@@ -44,6 +44,7 @@ export default class VideoViewer extends AppComponent {
     render() {
         return (
             <Modal
+                transparent={true}
                 onRequestClose={this.props.onRequestClose}
                 visible={this.props.visible} >
                 <View style={{ flex: 1 }} >
