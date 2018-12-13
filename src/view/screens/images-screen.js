@@ -15,14 +15,12 @@ import AppComponent from '../app-component';
 import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
 
-import { requestStoragePermission } from '../../helpers/permissions-helper';
 import { getPhotoStatuses, saveWhatsAppStatus, saveWhatsAppStatuses } from '../../helpers/whatsapp-helper';
 import { shareImage, shareImages } from '../../helpers/app-helper';
 import C from '../../constants';
 import App from '../../../App';
 import SwitchView from '../widgets/switch-view';
 import NoStatusWidget from '../widgets/no-status-widget';
-import { FlatList } from 'react-native-gesture-handler';
 
 
 
@@ -114,13 +112,11 @@ class ImagesScreen extends AppComponent {
     }
 
     async componentDidMount() {
-        if (await requestStoragePermission()) {
+        this.fetchStatuses()
+        setInterval(async () => {
+            if (this.state.multiSelectMode) return;
             this.fetchStatuses()
-            setInterval(async () => {
-                if (this.state.multiSelectMode) return;
-                this.fetchStatuses()
-            }, C.whatsAppStatusRefreshRate)
-        }
+        }, C.whatsAppStatusRefreshRate)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -145,10 +141,6 @@ class ImagesScreen extends AppComponent {
                     visible={this.state.showModal}
                     images={this.state.statuses.map(img => 'file://' + img)}
                 />
-
-                <SwitchView visible={this.state.statuses.length <= 0} >
-                    <NoStatusWidget />
-                </SwitchView>
 
                 <MultiSelectFlatlist
                     ref={'multiSelectList'}
@@ -175,6 +167,7 @@ class ImagesScreen extends AppComponent {
                     renderItem={this.renderPhoto.bind(this)}
                     refreshControl={
                         <RefreshControl
+                            colors={[this.theme.colors.secondary]}
                             onRefresh={() => {
                                 this.fetchStatuses().then(() => this.setState({ refreshing: false }))
                             }}
@@ -182,6 +175,12 @@ class ImagesScreen extends AppComponent {
                         />
                     }
                 />
+
+                <SwitchView visible={this.state.statuses.length <= 0} >
+                    <View style={{ position: 'absolute', bottom: this.state.screenWidth / 2 }} >
+                        <NoStatusWidget />
+                    </View>
+                </SwitchView>
 
                 {this.getMultiSelectActionBar()}
 

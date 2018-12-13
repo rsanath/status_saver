@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StatusBar, Modal, BackHandler } from 'react-native';
+import { View, StatusBar, Modal, BackHandler, Text } from 'react-native';
 import { AdMobBanner, AdMobInterstitial } from 'react-native-admob';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider } from 'react-redux';
@@ -8,7 +8,7 @@ import AppNavigator from './src/view/screens/navigator';
 import TitleBar from './src/view/widgets/titlebar';
 import SwitchView from './src/view/widgets/switch-view';
 import HowToUseScreen from './src/view/screens/howtouse-screen';
-
+import PermissionRequiredMsg from './src/view/widgets/permission-required-component';
 import IconButton from './src/view/widgets/icon-button';
 import AppComponent from './src/view/app-component';
 
@@ -20,6 +20,7 @@ import store from './src/redux/store';
 import { StatusActions } from './src/redux/actions/status-actions';
 import { t } from './src/i18n/i18n';
 import { notifyError } from './src/helpers/bugsnag-helper';
+import { requestStoragePermission, checkStoragePermission } from './src/helpers/permissions-helper';
 
 
 let _titleBar;
@@ -32,7 +33,8 @@ export default class App extends AppComponent {
     this.state = {
       ...this.state,
       adConfig: ads.DeafultAdConfig,
-      isModalVisible: false
+      isModalVisible: false,
+      permissionGranted: null
     }
   }
 
@@ -47,9 +49,14 @@ export default class App extends AppComponent {
   }
 
   async componentDidMount() {
+    this.setState({ permissionGranted: (await checkStoragePermission()) == 'granted' })
+
     const adConfig = await ads.getAdConfig()
     this.setState({ adConfig })
-    _titleBar = this.refs.titlebar // globalize a ref to title bar to make it accessable in status screens
+
+    // globalize a ref to title bar to make it accessable in status screens
+    // very bad! show find alternative way to achieve this
+    _titleBar = this.refs.titlebar
 
     this.preLoadAd(adConfig)
     BackHandler.addEventListener('hardwareBackPress', this.showAd);
@@ -81,6 +88,17 @@ export default class App extends AppComponent {
     })
 
     return false
+  }
+
+  shouldShowBottomBannerAd = () => {
+    const { adConfig } = this.state
+
+    return (
+      adConfig.showAds &&
+      adConfig.bottomBannerAd.showAd &&
+      this.state.orientation != 'landscape' &&
+      this.state.permissionGranted
+    )
   }
 
   render() {
@@ -131,21 +149,32 @@ export default class App extends AppComponent {
               ]}
             />
 
-            <AppNavigator />
+            <SwitchView visible={this.state.permissionGranted} >
+              <AppNavigator />
+            </SwitchView>
+
+            <SwitchView visible={this.state.permissionGranted == false} >
+              <View style={{ position: 'absolute', bottom: this.state.screenWidth / 2 }} >
+                <PermissionRequiredMsg
+                  onPermissionResult={result => this.setState({ permissionGranted: result })} />
+              </View>
+            </SwitchView>
 
             <SwitchView
-              visible={adConfig.showAds && adConfig.bottomBannerAd.showAd && this.state.orientation != 'landscape'} >
-              <AdMobBanner
-                adSize="fullBanner"
-                adUnitID={adConfig.bottomBannerAd.adUnitId}
-                testDeviceID={config.admob.testDeviceId}
-              />
+              visible={this.shouldShowBottomBannerAd()} >
+              <View style={{ position: 'absolute', bottom: 0 }} >
+                <AdMobBanner
+                  adSize="fullBanner"
+                  adUnitID={adConfig.bottomBannerAd.adUnitId}
+                  testDeviceID={config.admob.testDeviceId}
+                />
+              </View>
             </SwitchView>
 
           </View>
 
         </Provider>
-      </MenuProvider>
+      </MenuProvider >
     );
   }
 }

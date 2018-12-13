@@ -16,8 +16,7 @@ import MultiSelectActionBar from '../widgets/multi-select-actionbar';
 import VideoViewer from '../widgets/video-viewer';
 import StatusActionBar from '../widgets/status-actionbar';
 
-import { requestStoragePermission } from '../../helpers/permissions-helper';
-import { getVideoStatuses, isWhatsappInstalled, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
+import { getVideoStatuses, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
 import { shareVideo, shareVideos } from '../../helpers/app-helper';
 import C from '../../constants';
 import App from '../../../App';
@@ -90,11 +89,12 @@ class VideoScreen extends AppComponent {
             ) : null
     }
 
+
     renderFooter = () => {
         const status = this.getViewingStatus()
         return (
             <StatusActionBar
-                visible={true}
+                visible={this.state.showActions}
                 onSavePress={() => saveWhatsAppStatus(status)}
                 onSharePress={() => shareVideo(status)}
             />
@@ -112,12 +112,10 @@ class VideoScreen extends AppComponent {
     }
 
     async componentDidMount() {
-        if (await requestStoragePermission()) {
+        this.fetchStatuses()
+        setInterval(async () => {
             this.fetchStatuses()
-            setInterval(async () => {
-                this.fetchStatuses()
-            }, C.whatsAppStatusRefreshRate)
-        }
+        }, C.whatsAppStatusRefreshRate)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -138,10 +136,6 @@ class VideoScreen extends AppComponent {
                     visible={this.state.showModal}
                     videos={this.state.statuses.map(img => 'file://' + img)}
                 />
-
-                <SwitchView visible={this.state.statuses.length <= 0} >
-                    <NoStatusWidget />
-                </SwitchView>
 
                 <MultiSelectFlatlist
                     ref={'multiSelectList'}
@@ -168,6 +162,7 @@ class VideoScreen extends AppComponent {
                     renderItem={this.renderVideoThumbnail.bind(this)}
                     refreshControl={
                         <RefreshControl
+                            colors={[this.theme.colors.secondary]}
                             onRefresh={() => {
                                 this.fetchStatuses().then(() => this.setState({ refreshing: false }))
                             }}
@@ -176,8 +171,14 @@ class VideoScreen extends AppComponent {
                     }
                 />
 
+                <SwitchView visible={this.state.statuses.length <= 0} >
+                    <View style={{ position: 'absolute', bottom: this.state.screenWidth / 2 }} >
+                        <NoStatusWidget />
+                    </View>
+                </SwitchView>
+
                 {this.getMultiSelectActionBar()}
-            </View>
+            </View >
         );
     }
 }
