@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StatusBar, Modal, BackHandler, Text } from 'react-native';
+import { View, StatusBar, Modal, BackHandler, PermissionsAndroid } from 'react-native';
 import { AdMobBanner, AdMobInterstitial } from 'react-native-admob';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider } from 'react-redux';
@@ -49,7 +49,7 @@ export default class App extends AppComponent {
   }
 
   async componentDidMount() {
-    this.setState({ permissionGranted: (await checkStoragePermission()) == 'granted' })
+    this.setState({ permissionGranted: await checkStoragePermission()})
 
     const adConfig = await ads.getAdConfig()
     this.setState({ adConfig })
@@ -58,7 +58,11 @@ export default class App extends AppComponent {
     // very bad! show find alternative way to achieve this
     _titleBar = this.refs.titlebar
 
+    
+    AdMobInterstitial.setAdUnitID(adConfig.appCloseAd.adUnitId);
+    AdMobInterstitial.setTestDeviceID(config.admob.testDeviceId);
     this.preLoadAd(adConfig)
+    
     BackHandler.addEventListener('hardwareBackPress', this.showAd);
   }
 
@@ -73,8 +77,6 @@ export default class App extends AppComponent {
 
   preLoadAd = (adConfig) => {
     if (adConfig.showAds && adConfig.appCloseAd.showAd) {
-      AdMobInterstitial.setAdUnitID(adConfig.appCloseAd.adUnitId);
-      AdMobInterstitial.setTestDeviceID(config.admob.testDeviceId);
       AdMobInterstitial.requestAd();
     }
   }

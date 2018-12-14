@@ -8,8 +8,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { connect } from 'react-redux';
-
 import AppComponent from '../app-component';
 import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
 import MultiSelectActionBar from '../widgets/multi-select-actionbar';
@@ -24,7 +22,7 @@ import NoStatusWidget from '../widgets/no-status-widget';
 import SwitchView from '../widgets/switch-view';
 
 
-class VideoScreen extends AppComponent {
+export default class StatusScreen extends AppComponent {
     static navigationOptions = ({ navigation }) => {
         return {
             tabBarVisible: (navigation.state.params && !navigation.state.params.hideTabBar),
@@ -44,7 +42,7 @@ class VideoScreen extends AppComponent {
         refreshing: false
     }
 
-    renderVideoThumbnail({ item, index }) {
+    renderThumbnail({ item, index }) {
         const size = Dimensions.get('window').width / (this.isPortrait() ? 2 : 4)
 
         return (
@@ -61,8 +59,8 @@ class VideoScreen extends AppComponent {
     getViewingStatus = () => this.state.statuses[this.state.currentIndex]
 
     getMultiSelectActionBar = () => {
-        const onShare = () => shareVideos(this.state.selectedItems)
-        const onSave = () => saveWhatsAppStatuses(this.state.selectedItems)
+        const onShare = () => this.props.onShareMultiple(this.state.selectedItems)
+        const onSave = () => this.props.onSaveMultiple(this.state.selectedItems)
 
         return this.state.multiSelectMode ?
             (
@@ -159,7 +157,7 @@ class VideoScreen extends AppComponent {
                     numColumns={this.isPortrait() ? 2 : 4}
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
-                    renderItem={this.renderVideoThumbnail.bind(this)}
+                    renderItem={this.renderThumbnail.bind(this)}
                     refreshControl={
                         <RefreshControl
                             colors={[this.theme.colors.secondary]}
@@ -182,7 +180,3 @@ class VideoScreen extends AppComponent {
         );
     }
 }
-
-const mapStateToProps = ({ status }) => ({ ...status });
-
-export default connect(mapStateToProps)(VideoScreen);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Modal } from 'react-native';
+import { View, Modal, Image } from 'react-native';
 import Swiper from 'react-native-swiper';
 import PropTypes from 'prop-types';
 
@@ -29,7 +29,9 @@ export default class VideoViewer extends AppComponent {
                 this.setState({ showActions: !this.state.showActions })
             }
 
-            if (this.props.index != index) return null;
+            if (this.props.index != index) {
+                return null
+            }
 
             return (
                 <VideoPlayer
@@ -44,10 +46,10 @@ export default class VideoViewer extends AppComponent {
     render() {
         return (
             <Modal
-                transparent={true}
+                transparent={false}
                 onRequestClose={this.props.onRequestClose}
                 visible={this.props.visible} >
-                <View style={{ flex: 1 }} >
+                <View style={{ flex: 1, backgroundColor: 'black' }} >
                     <Swiper
                         loadMinimal={true}
                         ref={'swiper'}

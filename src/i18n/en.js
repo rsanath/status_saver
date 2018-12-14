@@ -4,7 +4,7 @@ export default {
 
     // Titles
     permissionTitle: "WhatsApp Status Saver Storage Permission",
-    perissionDescription: "WhatsApp Status Saver needs access to your Storage so you can save WhatsApp status to your device.",
+    perissionDescription: "WhatsApp Status Saver needs access to your Storage so that you can save WhatsApp status to your device.",
 
     // messages
     statusSaveSuccessMsg: 'Saved to device',
