@@ -1,4 +1,4 @@
-package com.whatsappstatussaver.modules.fs;
+package com.socialutilities.modules.fs;
 
 public class FSConst {
     public static final String EVENT_UPLOAD_PROGRESS = "RNFetchBlobProgress-upload";

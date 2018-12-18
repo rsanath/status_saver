@@ -1,4 +1,4 @@
-package com.whatsappstatussaver.modules.share;
+package com.socialutilities.modules.share;
 
 import android.app.Activity;
 import android.content.Intent;

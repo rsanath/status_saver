@@ -103,7 +103,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.whatsappstatussaver"
+        applicationId "com.socialutilities"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

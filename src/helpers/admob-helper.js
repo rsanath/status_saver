@@ -1,4 +1,4 @@
-import { get } from '../firebase'
+import { get } from '../api/firebase'
 import config from '../../config';
 import { notifyError } from './bugsnag-helper';
 

@@ -1,6 +1,6 @@
 import DeviceInfo from 'react-native-device-info';
 
-import { db } from '../firebase';
+import { db } from '../api/firebase';
 import C from '../constants';
 
 export const notifyError = async e => {

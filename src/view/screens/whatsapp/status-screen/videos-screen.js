@@ -8,21 +8,23 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import AppComponent from '../app-component';
-import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
-import MultiSelectActionBar from '../widgets/multi-select-actionbar';
-import VideoViewer from '../widgets/video-viewer';
-import StatusActionBar from '../widgets/status-actionbar';
+import { connect } from 'react-redux';
 
-import { getVideoStatuses, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
-import { shareVideo, shareVideos } from '../../helpers/app-helper';
-import C from '../../constants';
-import App from '../../../App';
-import NoStatusWidget from '../widgets/no-status-widget';
-import SwitchView from '../widgets/switch-view';
+import AppComponent from '../../../app-component';
+import MultiSelectFlatlist from '../../../components/multi-select-flatlist';
+import MultiSelectActionBar from '../../../components/multi-select-actionbar';
+import VideoViewer from '../../../components/video-viewer';
+import StatusActionBar from '../../../components/status-actionbar';
+
+import { getVideoStatuses, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../../../helpers/whatsapp-helper';
+import { shareVideo, shareVideos } from '../../../../helpers/app-helper';
+import C from '../../../../constants';
+import App from '../../home/home-screen';
+import NoStatusWidget from '../../../components/no-status-widget';
+import SwitchView from '../../../components/switch-view';
 
 
-export default class StatusScreen extends AppComponent {
+class VideoScreen extends AppComponent {
     static navigationOptions = ({ navigation }) => {
         return {
             tabBarVisible: (navigation.state.params && !navigation.state.params.hideTabBar),
@@ -42,7 +44,7 @@ export default class StatusScreen extends AppComponent {
         refreshing: false
     }
 
-    renderThumbnail({ item, index }) {
+    renderVideoThumbnail({ item, index }) {
         const size = Dimensions.get('window').width / (this.isPortrait() ? 2 : 4)
 
         return (
@@ -59,8 +61,8 @@ export default class StatusScreen extends AppComponent {
     getViewingStatus = () => this.state.statuses[this.state.currentIndex]
 
     getMultiSelectActionBar = () => {
-        const onShare = () => this.props.onShareMultiple(this.state.selectedItems)
-        const onSave = () => this.props.onSaveMultiple(this.state.selectedItems)
+        const onShare = () => shareVideos(this.state.selectedItems)
+        const onSave = () => saveWhatsAppStatuses(this.state.selectedItems)
 
         return this.state.multiSelectMode ?
             (
@@ -157,7 +159,7 @@ export default class StatusScreen extends AppComponent {
                     numColumns={this.isPortrait() ? 2 : 4}
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
-                    renderItem={this.renderThumbnail.bind(this)}
+                    renderItem={this.renderVideoThumbnail.bind(this)}
                     refreshControl={
                         <RefreshControl
                             colors={[this.theme.colors.secondary]}
@@ -180,3 +182,7 @@ export default class StatusScreen extends AppComponent {
         );
     }
 }
+
+const mapStateToProps = ({ status }) => ({ ...status });
+
+export default connect(mapStateToProps)(VideoScreen);

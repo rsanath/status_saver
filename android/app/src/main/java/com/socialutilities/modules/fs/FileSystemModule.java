@@ -1,4 +1,4 @@
-package com.whatsappstatussaver.modules.fs;
+package com.socialutilities.modules.fs;
 
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaScannerConnection;

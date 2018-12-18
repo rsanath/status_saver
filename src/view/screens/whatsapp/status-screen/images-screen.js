@@ -1,30 +1,30 @@
 import React from 'react';
 import {
     View,
-    StatusBar,
+    Image,
     Dimensions,
-    ImageBackground,
+    StatusBar,
     RefreshControl
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { connect } from 'react-redux';
 
-import AppComponent from '../app-component';
-import MultiSelectFlatlist from '../widgets/multi-select-flatlist';
-import MultiSelectActionBar from '../widgets/multi-select-actionbar';
-import VideoViewer from '../widgets/video-viewer';
-import StatusActionBar from '../widgets/status-actionbar';
+import ImageViewer from '../../../components/image-viewer';
+import StatusActionBar from '../../../components/status-actionbar';
+import AppComponent from '../../../app-component';
+import MultiSelectFlatlist from '../../../components/multi-select-flatlist';
+import MultiSelectActionBar from '../../../components/multi-select-actionbar';
 
-import { getVideoStatuses, saveWhatsAppStatuses, saveWhatsAppStatus } from '../../helpers/whatsapp-helper';
-import { shareVideo, shareVideos } from '../../helpers/app-helper';
-import C from '../../constants';
-import App from '../../../App';
-import NoStatusWidget from '../widgets/no-status-widget';
-import SwitchView from '../widgets/switch-view';
+import { getPhotoStatuses, saveWhatsAppStatus, saveWhatsAppStatuses } from '../../../../helpers/whatsapp-helper';
+import { shareImage, shareImages } from '../../../../helpers/app-helper';
+import C from '../../../../constants';
+import App from '../../home/home-screen';
+import SwitchView from '../../../components/switch-view';
+import NoStatusWidget from '../../../components/no-status-widget';
 
 
-class VideoScreen extends AppComponent {
+
+class ImagesScreen extends AppComponent {
     static navigationOptions = ({ navigation }) => {
         return {
             tabBarVisible: (navigation.state.params && !navigation.state.params.hideTabBar),
@@ -35,8 +35,8 @@ class VideoScreen extends AppComponent {
 
     state = {
         ...this.state,
-        showActions: true,
         showModal: false,
+        showActions: true,
         currentIndex: 0,
         statuses: [],
         multiSelectMode: false,
@@ -44,24 +44,39 @@ class VideoScreen extends AppComponent {
         refreshing: false
     }
 
-    renderVideoThumbnail({ item, index }) {
+    fetchStatuses = async () => {
+        this.setState({ statuses: await getPhotoStatuses(this.props.statusPath) })
+    }
+
+    renderPhoto({ item, index }) {
         const size = Dimensions.get('window').width / (this.isPortrait() ? 2 : 4)
 
         return (
-            <View>
-                <ImageBackground
-                    source={{ uri: 'file://' + item }}
-                    style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }} >
-                    <Icon size={60} color={'rgba(255,255,255,0.6)'} name={'play-circle-outline'} />
-                </ImageBackground>
-            </View>
+            <Image
+                source={{ uri: 'file://' + item }}
+                style={{ width: size, height: size }} />
         )
     }
 
     getViewingStatus = () => this.state.statuses[this.state.currentIndex]
 
+    renderFooter = () => {
+        return (
+            <StatusActionBar
+                onSharePress={() => shareImage(this.getViewingStatus())}
+                onSavePress={() => saveWhatsAppStatus(this.getViewingStatus())}
+                visible={this.state.showActions} />
+        )
+    }
+
+    renderHeader = () => {
+        return (
+            <View />
+        )
+    }
+
     getMultiSelectActionBar = () => {
-        const onShare = () => shareVideos(this.state.selectedItems)
+        const onShare = () => shareImages(this.state.selectedItems)
         const onSave = () => saveWhatsAppStatuses(this.state.selectedItems)
 
         return this.state.multiSelectMode ?
@@ -89,23 +104,8 @@ class VideoScreen extends AppComponent {
             ) : null
     }
 
-
-    renderFooter = () => {
-        const status = this.getViewingStatus()
-        return (
-            <StatusActionBar
-                visible={this.state.showActions}
-                onSavePress={() => saveWhatsAppStatus(status)}
-                onSharePress={() => shareVideo(status)}
-            />
-        )
-    }
-
-    fetchStatuses = async () => {
-        this.setState({ statuses: await getVideoStatuses(this.props.statusPath) })
-    }
-
     onRefresh = () => {
+        console.log('refreshing')
         this.setState({ refreshing: true })
         this.fetchStatuses()
             .then(() => this.setState({ refreshing: true }))
@@ -114,6 +114,7 @@ class VideoScreen extends AppComponent {
     async componentDidMount() {
         this.fetchStatuses()
         setInterval(async () => {
+            if (this.state.multiSelectMode) return;
             this.fetchStatuses()
         }, C.whatsAppStatusRefreshRate)
     }
@@ -125,16 +126,20 @@ class VideoScreen extends AppComponent {
     }
 
     render() {
+
         return (
             <View style={this.theme.containers.screen}>
-                <VideoViewer
-                    onPressVideo={() => this.setState(state => ({ showActions: !state.showActions }))}
+
+                <ImageViewer
+                    backgroundColor={'red'}
+                    onPressImage={() => this.setState(state => ({ showActions: !state.showActions }))}
+                    renderHeader={this.renderHeader}
                     renderFooter={this.renderFooter}
                     index={this.state.currentIndex}
                     onIndexChanged={currentIndex => this.setState({ currentIndex })}
                     onRequestClose={() => this.setState({ showModal: false })}
                     visible={this.state.showModal}
-                    videos={this.state.statuses.map(img => 'file://' + img)}
+                    images={this.state.statuses.map(img => 'file://' + img)}
                 />
 
                 <MultiSelectFlatlist
@@ -159,7 +164,7 @@ class VideoScreen extends AppComponent {
                     numColumns={this.isPortrait() ? 2 : 4}
                     data={this.state.statuses}
                     keyExtrator={({ item }) => item}
-                    renderItem={this.renderVideoThumbnail.bind(this)}
+                    renderItem={this.renderPhoto.bind(this)}
                     refreshControl={
                         <RefreshControl
                             colors={[this.theme.colors.secondary]}
@@ -178,11 +183,12 @@ class VideoScreen extends AppComponent {
                 </SwitchView>
 
                 {this.getMultiSelectActionBar()}
-            </View >
+
+            </View>
         );
     }
 }
 
 const mapStateToProps = ({ status }) => ({ ...status });
 
-export default connect(mapStateToProps)(VideoScreen);
+export default connect(mapStateToProps)(ImagesScreen);

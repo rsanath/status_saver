@@ -4,7 +4,7 @@ import Swiper from 'react-native-swiper';
 import PropTypes from 'prop-types';
 
 import AppComponent from '../app-component';
-import VideoPlayer from '../widgets/video-player';
+import VideoPlayer from './/video-player';
 import SwitchView from './switch-view';
 
 

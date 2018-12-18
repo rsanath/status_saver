@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 import { View, Modal, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +12,7 @@ export default class ImageViewer extends AppComponent {
     onIndexChanged = index => {
         this.setState({ index })
         this.props.onIndexChanged && this.props.onIndexChanged(index)
-    }
+    };
 
     getImages = () => {
 

@@ -1,17 +1,26 @@
-import fs from '../native-modules/file-system-module';
+import fs from '../native-modules/file-system';
+import notifyError from './bugsnag-helper';
+
+const sortByLatestFirst = files => {
+    return files.sort((a, b) => b.lastModified - a.lastModified)
+}
 
 export const checkAndCreateDir = async dir => {
     const exist = await fs.exists(dir)
-    
-    if (!exist) {
-        console.log('before1')
-        const isdir = await fs.isDir(dir)
-        console.log('after1')
 
+    if (exist) {
+        const isdir = await fs.isDir(dir)
         if (!isdir) {
-            console.log('before2')
             await fs.mkdir(dir)
-            console.log('after2')
         }
+    } else {
+        await fs.mkdir(dir)
     }
+}
+
+export const listContent = path => {
+    return fs.lstat(path)
+        .then(files => sortByLatestFirst(files))
+        .then(files => files.map(file => file.path))
+        .catch(notifyError)
 }

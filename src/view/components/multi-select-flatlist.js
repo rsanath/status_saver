@@ -6,34 +6,34 @@ import PropTypes from 'prop-types';
 import HighlightableView from './highlightable-view';
 
 
-const contains = (array, item) => {
-    for (let i in array) {
-        if (array[i] === item) return true;
+Array.prototype.contains = function(item) {
+    for (let i in this) {
+        if (this[i] === item) return true;
     }
     return false;
 }
 
-const remove = (arr, val) => {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === val) {
-            arr.splice(i, 1);
+Array.prototype.remove = function(val) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] === val) {
+            this.splice(i, 1);
             i--;
         }
     }
-    return arr;
+    return this;
 }
 
-const isEqual = (arr1, arr2) => {
-    if (arr1.length != arr2.length) return false;
-    for (let i in arr1) {
-        if (arr1[i] != arr2[i]) {
+Array.prototype.equals = function(arr) {
+    if (this.length != arr.length) return false;
+    for (let i in this) {
+        if (this[i] != arr[i]) {
             return false;
         }
     }
     return true;
 }
 
-export default class MultiSelectFlatlist extends Component {
+export default class MultiSelectFlatList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,12 +55,12 @@ export default class MultiSelectFlatlist extends Component {
     }
 
     _exitMultiSelectMode = () => {
-        this.props.onExitMultiSelectMode && this.props.onExitMultiSelectMode()
+        this.props.onExitMultiSelectMode()
         this.setState({ multiSelectMode: false, selectedIndexes: [] })
     }
 
     _enterMultiSelectMode = () => {
-        this.props.onEnterMultiSelectMode && this.props.onEnterMultiSelectMode()
+        this.props.onEnterMultiSelectMode()
         this.setState({ multiSelectMode: true })
     }
 
@@ -73,24 +73,28 @@ export default class MultiSelectFlatlist extends Component {
     }
 
     _onLongPress = item => {
+        if (!this.props.multiSelectEnabled) return;
+
         if (!this.state.multiSelectMode) this._enterMultiSelectMode();
         this._onPressItemInMultiSelectMode(item.index)
     }
 
     _onPressItemInMultiSelectMode = index => {
+        const {selectedIndexes} = this.state;
+
         let newList = []
-        if (contains(this.state.selectedIndexes, index)) {
+        if (selectedIndexes.contains(index)) {
             // selecting the already selected item. so unselect it
-            if (this.state.selectedIndexes.length == 1) {
+            if (selectedIndexes.length == 1) {
                 // if that was the only slected item. exit multiselect mode
                 this._exitMultiSelectMode()
             } else {
-                newList = remove(this.state.selectedIndexes, index)
+                newList = selectedIndexes.remove(index)
             }
         } else {
             // selecting the item for first time. add to selected list
             Vibration.vibrate(10)
-            newList = [...this.state.selectedIndexes, index]
+            newList = [...selectedIndexes, index]
         }
         this.props.onSelectionChange && this.props.onSelectionChange(newList)
         this.setState({ selectedIndexes: newList })
@@ -103,7 +107,7 @@ export default class MultiSelectFlatlist extends Component {
                 onLongPress={() => this._onLongPress(item)} >
                 <HighlightableView
                     style={this.props.highlightStyle}
-                    highlight={this.state.multiSelectMode && contains(this.state.selectedIndexes, item.index)}>
+                    highlight={this.state.multiSelectMode && this.state.selectedIndexes.contains(item.index)}>
                     {this.props.renderItem(item)}
                 </HighlightableView>
             </TouchableWithoutFeedback>
@@ -125,8 +129,10 @@ export default class MultiSelectFlatlist extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (!isEqual(this.state.selectedIndexes, prevState.selectedIndexes)) {
-            this.props.onSelectionChange && this.props.onSelectionChange(this.state.selectedIndexes)
+        const {selectedIndexes} = this.state;
+
+        if (!selectedIndexes.equals(prevState.selectedIndexes)) {
+            this.props.onSelectionChange(this.state.selectedIndexes)
         }
     }
 
@@ -141,11 +147,21 @@ export default class MultiSelectFlatlist extends Component {
     }
 }
 
-MultiSelectFlatlist.propTypes = {
+MultiSelectFlatList.propTypes = {
     onPressItem: PropTypes.func,
     onEnterMultiSelectMode: PropTypes.func,
     onExitMultiSelectMode: PropTypes.func,
     onSelectionChange: PropTypes.func,
     onCancelMultiSelect: PropTypes.func,
-    highlightStyle: PropTypes.object
+    highlightStyle: PropTypes.object,
+    multiSelectEnabled: PropTypes.bool,
+    vibrationsEnabled: PropTypes.bool
+}
+
+MultiSelectFlatList.defaultProps = {
+    onEnterMultiSelectMode: () => {},
+    onExitMultiSelectMode: () => {},
+    onSelectionChange: () => {},
+    multiSelectEnabled: true,
+    vibrationsEnabled: true
 }

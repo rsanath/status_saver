@@ -1,4 +1,4 @@
-package com.whatsappstatussaver.modules.share;
+package com.socialutilities.modules.share;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

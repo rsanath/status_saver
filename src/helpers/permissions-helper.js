@@ -16,3 +16,7 @@ export async function requestStoragePermission() {
 export const checkStoragePermission = () => {
   return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
 }
+
+export const isStoragePermissionGranted = () => {
+  return await checkStoragePermission() == PermissionsAndroid.RESULTS.GRANTED;
+}

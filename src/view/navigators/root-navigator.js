@@ -3,8 +3,8 @@ import { createMaterialTopTabNavigator, createAppContainer, createStackNavigator
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import ImagesScreen from "./images-screen";
-import VideosScreen from "./videos-screen";
+import ImagesScreen from "../screens/whatsapp-tab/status-screen/images-screen";
+import VideosScreen from "../screens/whatsapp-tab/status-screen/videos-screen";
 
 import theme from '../theme/theme'
 
@@ -43,22 +43,5 @@ const StatusNavigator = createMaterialTopTabNavigator({
             pressOpacity: 0.5
         }
     });
-
-const AppNaviator = createStackNavigator({
-    Status: {
-        screen: StatusNavigator,
-        navigationOptions: {
-            headerStyle: {
-                backgroundColor: theme.colors.primary,
-                elevation: 0,
-                shadowOpacity: 0,
-                shadowOffset: {
-                    height: 0,
-                },
-                shadowRadius: 0,
-            }
-        }
-    }
-})
 
 export default createAppContainer(StatusNavigator);

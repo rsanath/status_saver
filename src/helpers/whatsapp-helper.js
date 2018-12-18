@@ -2,7 +2,7 @@ import { t } from '../i18n/i18n';
 import C from '../constants';
 import { copyFile, toast, copyFiles } from './app-helper';
 import { notifyError } from './bugsnag-helper';
-import fs from '../native-modules/file-system-module';
+import fs from '../native-modules/file-system';
 
 export const getStatuses = path => {
     return fs.lstat(path)

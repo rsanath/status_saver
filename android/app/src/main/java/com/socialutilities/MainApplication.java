@@ -1,9 +1,9 @@
-package com.whatsappstatussaver;
+package com.socialutilities;
 
 import android.app.Application;
 
-import com.whatsappstatussaver.modules.fs.FileSystemPackage;
-import com.whatsappstatussaver.modules.share.SharePackage;
+import com.socialutilities.modules.fs.FileSystemPackage;
+import com.socialutilities.modules.share.SharePackage;
 
 import com.facebook.react.ReactApplication;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;

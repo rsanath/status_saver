@@ -2,9 +2,9 @@ import { ToastAndroid, Dimensions, Linking } from 'react-native';
 import { checkAndCreateDir } from './file-system-helper';
 import { NativeModules } from 'react-native';
 import { t } from '../i18n/i18n';
-import { get } from '../firebase';
+import { get } from '../api/firebase';
 import { notifyError } from './bugsnag-helper';
-import fs from '../native-modules/file-system-module';
+import fs from '../native-modules/file-system';
 
 
 export const copyFile = async (sourcePath, destDir) => {

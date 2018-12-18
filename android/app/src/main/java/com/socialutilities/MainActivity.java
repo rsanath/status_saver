@@ -1,4 +1,4 @@
-package com.whatsappstatussaver;
+package com.socialutilities;
 
 import com.facebook.react.ReactActivity;
 

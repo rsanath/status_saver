@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { t } from '../../i18n/i18n';
-import theme from '../theme/theme';
-import {sendMail, getSupportEmail} from '../../helpers/app-helper';
+import { t } from '../../../i18n/i18n';
+import theme from '../../theme/theme';
+import {sendMail, getSupportEmail} from '../../../helpers/app-helper';
 
 export default class HowToUseScreen extends Component {
   constructor(props) {
