@@ -34,7 +34,7 @@ const isVideo = file => {
 }
 
 export const saveWhatsAppStatus = status => {
-    copyFile(status, C.whatsAppStatusPersistPath)
+    copyFile(status, C.APP_DATA_PATH)
         .then(() => toast(t('statusSaveSuccessMsg')))
         .catch(e => {
             notifyError(e)
@@ -43,7 +43,7 @@ export const saveWhatsAppStatus = status => {
 }
 
 export const saveWhatsAppStatuses = statuses => {
-    copyFiles(statuses, C.whatsAppStatusPersistPath)
+    copyFiles(statuses, C.APP_DATA_PATH)
         .then(() => toast(t('statusSaveSuccessMsg')))
         .catch(e => {
             notifyError(e)

@@ -4,7 +4,7 @@ export default {
 
     // Titles
     permissionTitle: "WhatsApp Status Saver Storage Permission",
-    perissionDescription: "WhatsApp Status Saver needs access to your Storage so that you can save WhatsApp status to your device.",
+    permissionsDescription: "WhatsApp Status Saver needs access to your Storage so that you can save WhatsApp status to your device.",
 
     // messages
     statusSaveSuccessMsg: 'Saved to device',
@@ -18,7 +18,7 @@ export default {
         }
     },
 
-    lables: {
+    labels: {
         sendFeedback: 'Have any feedback or query ?',
         whatsappStatus: 'WhatsApp Statuses',
         gbWhatsappStatus: 'GBWhatsApp Statuses',
@@ -26,6 +26,10 @@ export default {
     },
 
     screens: {
+        whatsApp: {
+            photoStatusTitle: 'Photos',
+            videoStatusTitle: 'Videos'
+        },
         howtouse: {
             title: 'How To Use',
             steps: '1. Open WhatsApp and watch any status\n\n2. Then come back to this app and open the viewed status\n\n3. Press the save icon to save the status to your device :)',

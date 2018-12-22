@@ -23,7 +23,7 @@ export default class PermissionRequiredComponent extends Component {
                 <Image
                     style={{ width: 200, height: 200 }}
                     source={require('../../assets/images/castle.png')} />
-                <Text style={styles.info} >{t('perissionDescription')}</Text>
+                <Text style={styles.info} >{t('permissionsDescription')}</Text>
 
                 <TouchableOpacity onPress={this.onRequestPermission} >
                     <Text style={styles.button} >GRANT PERMISSION</Text>

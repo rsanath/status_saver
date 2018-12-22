@@ -6,7 +6,7 @@ import TitleBar from '../../components/titlebar';
 import SwitchView from '../../components/switch-view';
 import HowToUseScreen from './howtouse-screen';
 import PermissionRequiredMsg from '../../components/permission-required-component';
-import IconButton from '../../components/icon-button';
+import IconButton from '../../components/widgets/icon-button';
 import AppComponent from '../../app-component';
 
 import theme from '../../theme/theme';
@@ -133,21 +133,21 @@ export default class App extends AppComponent {
 
                 <TitleBar
                     ref={'titlebar'}
-                    title={C.appName}
+                    title={C.APP_NAME}
                     backgroundColor={theme.colors.primary}
                     foregroundColor={'white'}
                     menu={[
                         {
-                            name: t('lables.whatsappStatus'),
-                            onSelect: () => this.changeStatusSource(C.WhatappStatusPath)
+                            name: t('labels.whatsappStatus'),
+                            onSelect: () => this.changeStatusSource(C.WHATSAPP_STATUS_PATH)
                         },
                         {
-                            name: t('lables.gbWhatsappStatus'),
-                            onSelect: () => this.changeStatusSource(C.GBWhatsAppStatusPath)
+                            name: t('labels.gbWhatsappStatus'),
+                            onSelect: () => this.changeStatusSource(C.GBWHATSAPP_STATUS_PATH)
                         },
                         {
-                            name: t('lables.whatsappBusinessStatus'),
-                            onSelect: () => this.changeStatusSource(C.WhatsAppBusinessStatusPath)
+                            name: t('labels.whatsappBusinessStatus'),
+                            onSelect: () => this.changeStatusSource(C.WHATSAPP_BUSINESS_STATUS_PATH)
                         },
                     ]}
                     actions={[

@@ -38,5 +38,5 @@ export const notifyError = async e => {
 
     var key = db().ref().push().key;
 
-    db().ref('errors/' + C.appNameShort + '/' + key).set(errorInfo);
+    db().ref('errors/' + C.APP_NAME + '/' + key).set(errorInfo);
 }

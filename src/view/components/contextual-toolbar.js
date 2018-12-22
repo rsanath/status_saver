@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
-import IconButton from '../components/icon-button';
+import IconButton from './widgets/icon-button';
 
 
 export default class ContextualToolbar extends Component {
 
     getActions = () => {
-        this.props.actions.map(action => {
+        return this.props.actions.map(action => {
             return (
                 <IconButton
-                    style={styles.icon}
                     key={action.iconName}
                     onPress={action.onPress}
                     name={action.iconName}
@@ -25,6 +24,7 @@ export default class ContextualToolbar extends Component {
     render() {
         const { iconSize, foregroundColor, backgroundColor } = this.props;
         const containerStyle = { backgroundColor }
+        const countStyle = {color: this.props.foregroundColor}
 
         return (
             <View style={[styles.container, containerStyle]} >
@@ -37,7 +37,7 @@ export default class ContextualToolbar extends Component {
                     size={iconSize} />
 
                 <Text
-                    style={[styles.actionIcon]}  >
+                    style={[styles.count, countStyle]}  >
                     {this.props.count}
                 </Text>
 
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     },
     actionsContainer: {
         padding: 10,
+        flexDirection: 'row'
     },
     icon: {
         marginVertical: 3,
@@ -88,7 +89,8 @@ ContextualToolbar.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({
         iconName: PropTypes.string.isRequired,
         onPress: PropTypes.func.isRequired
-    }))
+    })),
+    onActionPressed: PropTypes.func.isRequired
 };
 
 ContextualToolbar.defaultProps = {
