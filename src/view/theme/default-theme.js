@@ -7,6 +7,15 @@ export default {
     secondary: "#00887a",
     secondaryDark: "#00766a"
   },
+  screens: {
+    whatsapp: {
+      tabBarColor: '#075e55',
+      tabIndicatorColor: '#fff',
+      statusBarColor: '#054c44',
+      tabBarHighlightColor: '#00887a',
+      statusBarHighlightColor: '#00766a'
+    }
+  },
   containers: {
     screen: {
       flex: 1,

@@ -29,13 +29,13 @@ export default class MediaViewer extends AppComponent {
     }
 
     renderThumbnail = ({ item, index }) => {
-        const size = this.state.screenWidth / (this.isPortrait() ? 2 : 4);
-        const thumbnailStyle = { width: size, height: size };
+        const size = this.state.screenWidth / (this.isPortrait() ? 2 : 4) - 4;
+        const thumbnailStyle = { width: size, height: size, margin: 1 };
 
         return (
             <Image
                 source={{ uri: item }}
-                style={thumbnailStyle} />
+                style={[thumbnailStyle, styles.thumbnail]} />
         )
     };
 
@@ -144,6 +144,7 @@ export default class MediaViewer extends AppComponent {
 
                 <SwitchView visible={this.state.data != null}>
                     <MultiSelectFlatList
+                        contentContainerStyle={{marginHorizontal: 2}}
                         ref={'multiSelectList'}
                         onEnterMultiSelectMode={this.onEnterMultiSelectMode}
                         onExitMultiSelectMode={this.onExitMultiSelectMode}

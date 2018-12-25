@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import StatusScreenReducer from './status-screen-reducer';
+import WhatsappReducer from './whatsapp-reducer';
 
 export default combineReducers({
-    status: StatusScreenReducer
+    whatsapp: WhatsappReducer
 })
