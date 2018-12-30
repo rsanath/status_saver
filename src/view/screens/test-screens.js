@@ -1,122 +1,66 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Video from 'react-native-video';
-import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
+import React from 'react';
+import {StyleSheet, Image, View} from 'react-native';
 import AppComponent from '../app-component';
+import MediaViewer from "../components/media-viewer";
+import {listContent} from "../../helpers/file-system-helper";
+import Constants from "../../constants";
+import SwitchView from "../components/switch-view";
+import IconButton from "../components/widgets/icon-button";
+import MediaLister from '../components/media-lister';
 
-class TestScreen extends AppComponent {
-  videoPlayer;
+export default class TestScreen extends AppComponent {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        ...this.state,
-      currentTime: 0,
-      duration: 0,
-      isFullScreen: false,
-      isLoading: true,
-      paused: false,
-      playerState: PLAYER_STATES.PLAYING,
-    };
-  }
-
-  onSeek = seek => {
-    this.videoPlayer.seek(seek);
-  };
-
-  onPaused = playerState => {
-    this.setState({
-      paused: !this.state.paused,
-      playerState,
-    });
-  };
-
-  onReplay = () => {
-    this.setState({ playerState: PLAYER_STATES.PLAYING });
-    this.videoPlayer.seek(0);
-  };
-
-  onProgress = data => {
-    const { isLoading, playerState } = this.state;
-    // Video Player will continue progress even if the video already ended
-    if (!isLoading && playerState !== PLAYER_STATES.ENDED) {
-      this.setState({ currentTime: data.currentTime });
+    componentDidMount(): void {
+        listContent(Constants.WHATSAPP_STATUS_PATH)
+            .then(items => this.setState({data: items.map(i => 'file://' + i)}))
     }
-  };
 
-  onLoad = data => this.setState({ duration: data.duration, isLoading: false });
+    renderHeader = () => {
+        return (
+            <View style={styles.header} >
+                <IconButton name={'share'} size={30} color={'white'} onPress={() => alert('on save press')} />
+            </View>
+        )
+    };
 
-  onLoadStart = data => this.setState({ isLoading: true });
+    render() {
+        return (
+            <View style={styles.container}>
 
-  onEnd = () => this.setState({ playerState: PLAYER_STATES.ENDED });
+                <MediaLister path={Constants.WHATSAPP_STATUS_PATH} />
 
-  onError = () => alert('Oh! ', error);
-
-  exitFullScreen = () => {};
-
-  enterFullScreen = () => {};
-
-  onFullScreen = () => {};
-
-  renderToolbar = () => (
-    <View style={styles.toolbar}>
-      <Text>I'm a custom toolbar </Text>
-    </View>
-  );
-  onSeeking = currentTime => this.setState({ currentTime });
-  render() {
-    return (
-      <View style={styles.container}>
-        <Video
-          onEnd={this.onEnd}
-          onLoad={this.onLoad}
-          onLoadStart={this.onLoadStart}
-          onProgress={this.onProgress}
-          paused={this.state.paused}
-          ref={videoPlayer => (this.videoPlayer = videoPlayer)}
-          resizeMode="cover"
-          source={{ uri: 'https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' }}
-          style={{
-              width: this.state.screenWidth,
-          }}
-          volume={0.0}
-        />
-        <MediaControls
-          duration={this.state.duration}
-          isLoading={this.state.isLoading}
-          mainColor="orange"
-          onFullScreen={this.onFullScreen}
-          onPaused={this.onPaused}
-          onReplay={this.onReplay}
-          onSeek={this.onSeek}
-          onSeeking={this.onSeeking}
-          playerState={this.state.playerState}
-          progress={this.state.currentTime}
-          toolbar={this.renderToolbar()}
-        />
-      </View>
-    );
-  }
+                <SwitchView visible={this.state.data && false} >
+                    <MediaViewer
+                        videoProgressbarColor={this.theme.colors.primary}
+                        renderHeader={this.renderHeader}
+                        renderFooter={this.renderHeader}
+                        media={this.state.data || []}/>
+                </SwitchView>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  toolbar: {
-    marginTop: 30,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-  },
-  mediaPlayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    backgroundColor: 'black',
-  },
+    container: {
+        flex: 1
+    },
+    toolbar: {
+        marginTop: 30,
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+    },
+    mediaPlayer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        backgroundColor: 'black',
+    },
+    header: {
+        paddingHorizontal: 20,
+        paddingVertical: 10
+    }
 });
-
-export default TestScreen;

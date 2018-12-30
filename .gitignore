@@ -57,3 +57,6 @@ buck-out/
 config.js
 signing-keystore
 gradle.properties
+# Haul
+#
+haul-debug.log

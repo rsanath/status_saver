@@ -11,17 +11,17 @@ Array.prototype.contains = function(item) {
         if (this[i] === item) return true;
     }
     return false;
-}
+};
 
 Array.prototype.remove = function(val) {
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
         if (this[i] === val) {
             this.splice(i, 1);
             i--;
         }
     }
     return this;
-}
+};
 
 Array.prototype.equals = function(arr) {
     if (this.length != arr.length) return false;
@@ -31,7 +31,7 @@ Array.prototype.equals = function(arr) {
         }
     }
     return true;
-}
+};
 
 export default class MultiSelectFlatList extends Component {
     constructor(props) {

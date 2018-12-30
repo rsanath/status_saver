@@ -6,6 +6,7 @@ import com.socialutilities.modules.fs.FileSystemPackage;
 import com.socialutilities.modules.share.SharePackage;
 
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FastImageViewPackage(),
             new RNDeviceInfo(),
             new RNAdMobPackage(),
             new RNGestureHandlerPackage(),
