@@ -11,6 +11,7 @@ export default class ContextualToolbar extends Component {
         return this.props.actions.map(action => {
             return (
                 <IconButton
+                    style={styles.action}
                     key={action.iconName}
                     onPress={action.onPress}
                     name={action.iconName}
@@ -69,6 +70,9 @@ const styles = StyleSheet.create({
     icon: {
         marginVertical: 3,
         marginHorizontal: 5
+    },
+    action: {
+        marginLeft: 10
     },
     flexibleGap: {
         flex: 1

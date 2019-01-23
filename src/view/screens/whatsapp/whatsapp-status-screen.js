@@ -45,12 +45,6 @@ class WhatsAppStatusScreen extends AppComponent {
         this.setState({multiSelectItems: []})
     };
 
-    getMultiSelectActions = () => {
-        return [
-            {iconName: 'content-save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)}
-        ]
-    };
-
     onSaveMultiple = async (items) => {
         const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
         if (!exist) {
@@ -67,6 +61,10 @@ class WhatsAppStatusScreen extends AppComponent {
                 this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
             })
     };
+
+    onShareMultiple = (items) => {
+        ShareModule.shareMultipleMedia(items, 'images/*')
+    }
 
     onPressItem = (item, index, data) => {
         this.setState({selectedIndex: index, mediaViewerVisible: true})
@@ -117,6 +115,13 @@ class WhatsAppStatusScreen extends AppComponent {
         const type = CommonUtil.getMediaType(path);
         const mime = type == 'video' ? 'video/mp4' : 'image/jpg';
         ShareModule.shareMedia(path, mime)
+    };
+
+    getMultiSelectActions = () => {
+        return [
+            {iconName: 'content-save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)},
+            {iconName: 'share-variant', onPress: () => this.onShareMultiple(this.state.multiSelectItems)},
+        ]
     };
 
     renderHeader = function (path) {

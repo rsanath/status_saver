@@ -60,6 +60,7 @@ export default class MultiSelectFlatList extends Component {
     }
 
     _enterMultiSelectMode = () => {
+        Vibration.vibrate(10)
         this.props.onEnterMultiSelectMode()
         this.setState({ multiSelectMode: true })
     }
@@ -93,7 +94,6 @@ export default class MultiSelectFlatList extends Component {
             }
         } else {
             // selecting the item for first time. add to selected list
-            Vibration.vibrate(10)
             newList = [...selectedIndexes, index]
         }
         this.props.onSelectionChange && this.props.onSelectionChange(newList)

@@ -47,7 +47,7 @@ public class ShareModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void shareMedia(ReadableArray uriToMedia, String mimeType, String message) {
+    public void shareMultipleMedia(ReadableArray uriToMedia, String mimeType, String message) {
         Activity context = getCurrentActivity();
 
         Intent intent = new Intent();

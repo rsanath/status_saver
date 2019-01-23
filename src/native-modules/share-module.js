@@ -14,7 +14,7 @@ const shareMedia = (path, mimeType = '*/*', message = '') => {
 
 const shareMultipleMedia = (media, mimeType = '*/*', message = '') => {
     try {
-        NativeModules.MediaShareModule.shareMedia(media, mimeType, message);
+        NativeModules.MediaShareModule.shareMultipleMedia(media, mimeType, message);
     } catch (e) {
         notifyError(e);
         toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
