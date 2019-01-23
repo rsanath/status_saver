@@ -24,6 +24,6 @@ const shareMultipleMedia = (media, mimeType = '*/*', message = '') => {
 const ShareModule = {
     shareMedia,
     shareMultipleMedia
-}
+};
 
 export default ShareModule;

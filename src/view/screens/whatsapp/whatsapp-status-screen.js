@@ -3,7 +3,9 @@ import {
     View,
     StyleSheet,
     Alert,
-    Dimensions
+    Dimensions,
+    StatusBar,
+    Modal
 } from 'react-native';
 
 import {NavigationActions} from 'react-navigation';
@@ -19,36 +21,79 @@ import fs from '../../../native-modules/file-system';
 import CommonUtil from "../../../utils/common-utils";
 import {notifyError} from "../../../helpers/bugsnag-helper";
 import ShareModule from "../../../native-modules/share-module";
+import MediaViewer from "../../components/media-viewer";
 
 
 class WhatsAppStatusScreen extends AppComponent {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            selectedIndex: 0,
+            mediaViewerVisible: false
+        }
+    }
+
+    onMultiSelectItemsChange = (selection) => {
+        this.setState({
+            multiSelectItems: selection
+        })
+    };
+
+    clearMultiSelectItems = () => {
+        this.setState({multiSelectItems: []})
+    };
+
+    getMultiSelectActions = () => {
+        return [
+            {iconName: 'content-save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)}
+        ]
+    };
+
+    onSaveMultiple = async (items) => {
+        const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
+        if (!exist) {
+            await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
+        }
+        let saves = items.map(item => {
+            let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(item);
+            return fs.cp(item, dest);
+        });
+        Promise.all(saves)
+            .then(() => this.toast(this.t('messages.saveSuccess')))
+            .catch(e => {
+                notifyError(e);
+                this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
+            })
+    };
+
     onPressItem = (item, index, data) => {
-        const props = {
-            index,
-            media: data,
-            immersiveMode: false,
-            renderFooter: this.renderFooter,
-            renderHeader: this.renderHeader
-        };
-        this.props.navigation.navigate('StatusViewer', {props})
+        this.setState({selectedIndex: index, mediaViewerVisible: true})
     };
 
     onPressInfo = async path => {
         Alert.alert(
             this.t('labels.fileInfo'),
-            await getFileInfoAsString(path)),
+            await getFileInfoAsString(path),
             [],
-            {cancelable: true}
+            {cancelable: true})
     };
 
     onPressDelete = path => {
+        const deleteFile = () => {
+            fs.rm(path)
+                .then(() => {
+                    this.toast('Deleted')
+                })
+        };
+
         Alert.alert(
             this.t('titles.deleteStatus'),
             this.t('messages.deleteStatus'),
             [
                 {text: this.t('labels.cancel'), onPress: null, style: 'cancel'},
-                {text: this.t('labels.delete'), onPress: () => fs.rm(path).then(() => this.toast('Deleted'))},
+                {text: this.t('labels.delete'), onPress: deleteFile},
             ],
             {cancelable: true}
         )
@@ -59,13 +104,9 @@ class WhatsAppStatusScreen extends AppComponent {
         if (!exist) {
             await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
         }
-
-        this.toast(CommonUtil.getFileName(path));
-
-        fs.cp(path, Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path))
-            .then(() => {
-                this.toast(this.t('messages.saveSuccess'))
-            })
+        let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path);
+        fs.cp(path, dest)
+            .then(() => this.toast(this.t('messages.saveSuccess')))
             .catch(e => {
                 notifyError(e);
                 this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
@@ -79,7 +120,7 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     renderHeader = function (path) {
-        const onPress = () => this.props.navigation.dispatch(NavigationActions.back());
+        const onPress = () => this.setState({mediaViewerVisible: false});
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <IconButton name={'chevron-down'} size={50} color={'white'} onPress={onPress}/>
@@ -88,7 +129,6 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     renderFooter = path => {
-        console.log(path)
         return (
             <View style={styles.header}>
                 <IconButton
@@ -119,27 +159,43 @@ class WhatsAppStatusScreen extends AppComponent {
         )
     };
 
+    renderMediaViewer = () => {
+        if (!this.state.mediaViewerVisible) return null;
+
+        return (
+            <Modal
+                animationType={'slide'}
+                onRequestClose={() => this.setState({mediaViewerVisible: false})}
+                visible={this.state.mediaViewerVisible}>
+                <StatusBar backgroundColor={'black'}/>
+                <MediaViewer
+                    index={this.state.selectedIndex}
+                    data={this.state.data}
+                    immersiveMode={false}
+                    renderFooter={this.renderFooter}
+                    renderHeader={this.renderHeader.bind(this)}
+                />
+            </Modal>
+        )
+    };
+
     render() {
         const screen = Dimensions.get('screen');
         const window = Dimensions.get('window');
 
-        console.log(`Height\nscreen: ${screen.height}\twindow: ${window.height}\t diff: ${screen.height - window.height}`)
-        console.log(`Width\nscreen: ${screen.width}\twindow: ${window.width}\t diff: ${screen.width - window.width}`)
-
         return (
             <View style={this.theme.containers.screen}>
+                {this.renderMediaViewer()}
                 <Gallery
                     path={this.props.statusSource}
                     dataRefreshRate={Constants.MEDIA_REFRESH_RATE}
                     onPressItem={this.onPressItem}
-                    onEnterMultiSelectMode={() => {
-                    }}
-                    onExitMultiSelectMode={() => {
-                    }}
-                    onRequestCancelMultiSelect={() => {
-                    }}
-                    onMultiSelectSelectionChange={() => {
-                    }}
+                    onEnterMultiSelectMode={() => null}
+                    onExitMultiSelectMode={this.clearMultiSelectItems}
+                    onRequestCancelMultiSelect={this.clearMultiSelectItems}
+                    onMultiSelectSelectionChange={this.onMultiSelectItemsChange}
+                    multiSelectActions={this.getMultiSelectActions()}
+                    onDataChange={data => this.setState({data})}
                 />
             </View>
         );

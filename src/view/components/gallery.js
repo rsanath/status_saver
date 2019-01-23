@@ -34,21 +34,22 @@ export default class Gallery extends AppComponent {
 
     renderThumbnail = ({item, index}) => {
         const size = this.state.screenWidth / (this.isPortrait() ? 2 : 4) - 4;
-        const thumbnailStyle = {width: size, height: size, margin: 1, backgroundColor: 'white'};
+        const thumbnailStyle = {width: size, height: size};
 
         const isVideo = CommonUtil.getMediaType(item) === 'video';
 
         return (
             isVideo ? (
-                <ImageBackground
-                    source={{uri: item}}
-                    style={[thumbnailStyle, styles.videoThumbnail]}>
-                    <Icon style={{}} color={'#fff'} size={30} name={'video'}/>
-                </ImageBackground>
+                <View>
+                    <Image
+                        source={{uri: item}}
+                        style={[thumbnailStyle, styles.thumbnail]}/>
+                    <Icon style={styles.videoIndicatorIcon} color={'#fff'} size={30} name={'video'}/>
+                </View>
             ) : (
                 <Image
                     source={{uri: item}}
-                    style={[thumbnailStyle]}/>
+                    style={[thumbnailStyle, styles.thumbnail]}/>
             )
         )
     };
@@ -73,7 +74,11 @@ export default class Gallery extends AppComponent {
         let data = await listContent(this.props.path);
         data = this.props.filterData(data);
 
-        this.setState({fetchingData: false, data})
+        if (!this.state.data.equals(data)) {
+            this.setState({data});
+            this.props.onDataChange && this.props.onDataChange(data)
+        }
+        this.setState({fetchingData: false})
     };
 
     fetchData = async () => {
@@ -82,7 +87,10 @@ export default class Gallery extends AppComponent {
         let data = await listContent(this.props.path);
         data = this.props.filterData(data);
 
-        this.setState({data});
+        if (!this.state.data.equals(data)) {
+            this.setState({data});
+            this.props.onDataChange && this.props.onDataChange(data)
+        }
     };
 
     onEnterMultiSelectMode = () => {
@@ -201,10 +209,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    videoThumbnail: {
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        padding: 10
+    videoIndicatorIcon: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10
+    },
+    thumbnail: {
+        margin: 1,
+        backgroundColor: 'white',
+        borderRadius: 10
     },
     videoIndicator: {
         borderWidth: 1,
@@ -222,6 +235,7 @@ const styles = StyleSheet.create({
 Gallery.propTypes = {
     path: PropTypes.string.isRequired,
     filterData: PropTypes.func,
+    onDataChange: PropTypes.func,
     onEnterMultiSelectMode: PropTypes.func.isRequired,
     onExitMultiSelectMode: PropTypes.func.isRequired,
     onRequestCancelMultiSelect: PropTypes.func.isRequired,

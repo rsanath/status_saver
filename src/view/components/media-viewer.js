@@ -26,7 +26,6 @@ export default class MediaViewer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
             swipeEnabled: true,
             showHeaderFooter: true,
             currentPosition: 0,
@@ -175,7 +174,7 @@ export default class MediaViewer extends React.Component {
                     extraData={this.state.showHeaderFooter}
                     pagingEnabled={true}
                     removeClippedSubviews={true}
-                    data={this.props.media}
+                    data={this.props.data}
                     renderItem={this.renderItem}
                     scrollEnabled={this.state.swipeEnabled}
                     onViewableItemsChanged={this.onViewableItemsChanged}

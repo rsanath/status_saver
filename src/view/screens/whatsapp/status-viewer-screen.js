@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
+import {connect} from 'react-redux';
 
 import MediaViewer from '../../components/media-viewer';
 
@@ -29,4 +30,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     }
+});
+
+const mapStateToProps = ({whatsapp}) => ({
+    data: whatsapp.data
 });

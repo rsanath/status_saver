@@ -1,0 +1,11 @@
+== todos ==
+1. refresh data immediately inside the media viewer screen where
+    the source data has changed in the whatsapp-media-screen.
+
+
+== bug fix ==
+
+1. Handle orientation change in media viewer screen.
+
+
+== features ==
