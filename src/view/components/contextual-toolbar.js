@@ -19,12 +19,12 @@ export default class ContextualToolbar extends Component {
                 />
             )
         })
-    }
+    };
 
     render() {
         const { iconSize, foregroundColor, backgroundColor } = this.props;
-        const containerStyle = { backgroundColor }
-        const countStyle = {color: this.props.foregroundColor}
+        const containerStyle = { backgroundColor };
+        const countStyle = {color: this.props.foregroundColor};
 
         return (
             <View style={[styles.container, containerStyle]} >
@@ -84,7 +84,7 @@ ContextualToolbar.propTypes = {
     iconSize: PropTypes.number,
     foregroundColor: PropTypes.string,
     backgroundColor: PropTypes.string,
-    selectedCount: PropTypes.number.isRequired,
+    selectedCount: PropTypes.number,
     onRequestCancel: PropTypes.func.isRequired,
     actions: PropTypes.arrayOf(PropTypes.shape({
         iconName: PropTypes.string.isRequired,

@@ -37,9 +37,16 @@ const getMediaType = filepath => {
     } else {
         return null;
     }
-
 };
 
-export default {
-    getMediaType
+const getFileName = path => {
+    const parts = path.split('/');
+    return parts[parts.length - 1];
 };
+
+const CommonUtil = {
+    getMediaType,
+    getFileName
+};
+
+export default CommonUtil;

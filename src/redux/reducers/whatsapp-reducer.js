@@ -3,7 +3,7 @@ import { WhatsAppConstants } from '../actions/whatsapp-actions';
 import {t} from "../../i18n/i18n";
 
 const initialState = {
-    statusSource: Constants.GBWHATSAPP_STATUS_PATH,
+    statusSource: Constants.WHATSAPP_STATUS_PATH,
 
     multiSelectMode: false,
 

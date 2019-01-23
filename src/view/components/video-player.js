@@ -2,9 +2,13 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Video from 'react-native-video'; // eslint-disable-line
+import Video from 'react-native-video';
+
+import FadeView from "./fade-view"; // eslint-disable-line
+
 
 const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
+const HEADER_HEIGHT = 50;
 
 const styles = StyleSheet.create({
     preloadingPlaceholder: {
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        height: 50,
+        height: HEADER_HEIGHT,
         width: '100%',
         position: 'absolute',
         top: 0,
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     footer: {
-        height: 50,
+        height: HEADER_HEIGHT,
         width: '100%',
         position: 'absolute',
         bottom: 48,
@@ -337,11 +341,14 @@ export default class VideoPlayer extends Component {
     }
 
     seek(t) {
-        this.player.seek(t);
+        if (this.player) {
+            this.player.seek(t);
+        }
     }
 
     stop() {
         this.setState({
+            isStarted: false,
             isPlaying: false,
             progress: 0,
         });
@@ -381,19 +388,24 @@ export default class VideoPlayer extends Component {
 
     renderThumbnail() {
         const {thumbnail, style, customStyles, ...props} = this.props;
+        const onPress = () => {
+            this.props.onPressThumbnailImage && this.props.onPressThumbnailImage()
+        };
         return (
-            <BackgroundImage
-                {...props}
-                style={[
-                    styles.thumbnail,
-                    this.getSizeStyles(),
-                    style,
-                    customStyles.thumbnail,
-                ]}
-                source={thumbnail}
-            >
-                {this.renderStartButton()}
-            </BackgroundImage>
+            <TouchableOpacity activeOpacity={1} onPress={onPress} >
+                <BackgroundImage
+                    {...props}
+                    style={[
+                        styles.thumbnail,
+                        this.getSizeStyles(),
+                        style,
+                        customStyles.thumbnail,
+                    ]}
+                    source={thumbnail}
+                >
+                    {this.renderStartButton()}
+                </BackgroundImage>
+            </TouchableOpacity>
         );
     }
 
@@ -480,22 +492,22 @@ export default class VideoPlayer extends Component {
     }
 
     renderHeader() {
-        if (typeof this.props.renderHeader != 'function') return null;
+        if (!this.props.renderHeader) return null;
 
         return (
-            <View style={styles.header}>
+            <FadeView style={styles.header}>
                 {this.props.renderHeader()}
-            </View>
+            </FadeView>
         )
     }
 
     renderFooter() {
-        if (typeof this.props.renderFooter != 'function') return null;
+        if (!this.props.renderFooter) return null;
 
         return (
-            <View style={styles.footer}>
+            <FadeView style={styles.footer}>
                 {this.props.renderFooter()}
-            </View>
+            </FadeView>
         )
     }
 
@@ -558,7 +570,7 @@ export default class VideoPlayer extends Component {
                     ((!this.state.isPlaying) || this.state.isControlsVisible)
                         ? (
                             [this.renderControls(), this.renderHeader(), this.renderFooter()]
-                        ) : this.renderSeekBar(true)
+                        ) : null
                 }
             </View>
         );
@@ -638,7 +650,8 @@ VideoPlayer.propTypes = {
     onShowControls: PropTypes.func,
     onMutePress: PropTypes.func,
     onSeekingEnd: PropTypes.func,
-    onSeekingStart: PropTypes.func
+    onSeekingStart: PropTypes.func,
+    onPressThumbnailImage: PropTypes.func
 };
 
 VideoPlayer.defaultProps = {

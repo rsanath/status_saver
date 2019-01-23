@@ -19,18 +19,11 @@ export default class App extends Component {
 
     render() {
         return (
-            <TestScreen />
+            <MenuProvider>
+                <StoreProvider store={store}>
+                    <AppNavigator/>
+                </StoreProvider>
+            </MenuProvider>
         );
     }
 }
-
-/*
-
-<MenuProvider>
-    <StoreProvider store={store}>
-        <AppNavigator/>
-    </StoreProvider>
-</MenuProvider>
-
-
-*/

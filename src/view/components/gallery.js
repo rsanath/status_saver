@@ -4,7 +4,9 @@ import React from 'react';
 import {
     View,
     RefreshControl,
-    StyleSheet
+    StyleSheet,
+    ImageBackground,
+    Modal
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Image from 'react-native-fast-image';
@@ -13,10 +15,12 @@ import AppComponent from '../app-component';
 import MultiSelectFlatList from './multi-select-flatlist';
 import ContextualActionBar from './contextual-toolbar';
 import SwitchView from './switch-view';
-import { listContent } from '../../helpers/file-system-helper';
+import {listContent} from '../../helpers/file-system-helper';
+import CommonUtil from "../../utils/common-utils";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
-export default class MediaLister extends AppComponent {
+export default class Gallery extends AppComponent {
 
     constructor(props) {
         super(props);
@@ -28,15 +32,29 @@ export default class MediaLister extends AppComponent {
         };
     }
 
-    renderThumbnail = ({ item, index }) => {
+    renderThumbnail = ({item, index}) => {
         const size = this.state.screenWidth / (this.isPortrait() ? 2 : 4) - 4;
-        const thumbnailStyle = { width: size, height: size, margin: 1 };
+        const thumbnailStyle = {width: size, height: size, margin: 1, backgroundColor: 'white'};
+
+        const isVideo = CommonUtil.getMediaType(item) === 'video';
 
         return (
-            <Image
-                source={{ uri: item }}
-                style={[thumbnailStyle, styles.thumbnail]} />
+            isVideo ? (
+                <ImageBackground
+                    source={{uri: item}}
+                    style={[thumbnailStyle, styles.videoThumbnail]}>
+                    <Icon style={{}} color={'#fff'} size={30} name={'video'}/>
+                </ImageBackground>
+            ) : (
+                <Image
+                    source={{uri: item}}
+                    style={[thumbnailStyle]}/>
+            )
         )
+    };
+
+    onPressItem = ({item, index}) => {
+        this.props.onPressItem && this.props.onPressItem(this.state.data[index], index, this.state.data)
     };
 
     getRefreshControl = () => {
@@ -50,12 +68,12 @@ export default class MediaLister extends AppComponent {
     };
 
     refreshData = async () => {
-        this.setState({ fetchingData: true });
+        this.setState({fetchingData: true});
 
         let data = await listContent(this.props.path);
         data = this.props.filterData(data);
 
-        this.setState({ fetchingData: false, data })
+        this.setState({fetchingData: false, data})
     };
 
     fetchData = async () => {
@@ -64,22 +82,22 @@ export default class MediaLister extends AppComponent {
         let data = await listContent(this.props.path);
         data = this.props.filterData(data);
 
-        this.setState({ data });
+        this.setState({data});
     };
 
     onEnterMultiSelectMode = () => {
-        this.setState({ multiSelectMode: true })
+        this.setState({multiSelectMode: true});
         this.props.onEnterMultiSelectMode()
     };
 
     onExitMultiSelectMode = () => {
-        this.setState({ multiSelectMode: false })
+        this.setState({multiSelectMode: false});
         this.props.onExitMultiSelectMode()
     };
 
     onSelectionChange = selectedIndex => {
-        this.setState({ selectedIndex })
-        const selectedItems = selectedIndex.map(i => this.state.data[i])
+        this.setState({selectedIndex});
+        const selectedItems = selectedIndex.map(i => this.state.data[i]);
         this.props.onMultiSelectSelectionChange(selectedItems)
     };
 
@@ -92,19 +110,19 @@ export default class MediaLister extends AppComponent {
     };
 
     exitMultiSelectMode = () => {
-        this.setState({ multiSelectMode: false, selectedIndex: [] })
-        this.refs.multiSelectList.finishMultiSelectMode()
+        this.setState({multiSelectMode: false, selectedIndex: []});
+        this.refs.multiSelectList.finishMultiSelectMode();
         this.props.onRequestCancelMultiSelect()
     };
 
-    getSelectedItems = () => this.state.selectedIndex.map(i => this.state.data[i])
+    getSelectedItems = () => this.state.selectedIndex.map(i => this.state.data[i]);
 
     getMultiSelectAction = () => {
         return this.props.multiSelectActions.map(action => {
             let onPress = () => {
-                action.onPress(this.getSelectedItems())
+                action.onPress(this.getSelectedItems());
                 this.refs.multiSelectList.finishMultiSelectMode()
-            }
+            };
             return {
                 iconName: action.iconName,
                 onPress: onPress
@@ -116,7 +134,7 @@ export default class MediaLister extends AppComponent {
         await this.fetchData();
 
         const autoRefresh = setInterval(this.fetchData, this.props.dataRefreshRate);
-        this.setState({ autoRefresh });
+        this.setState({autoRefresh});
     }
 
     componentWillUnmount() {
@@ -125,16 +143,18 @@ export default class MediaLister extends AppComponent {
 
     render() {
         const showNoMediaMessage = this.state.data && this.state.data.length > 0;
-        const { multiSelectActionsStyle } = this.props;
+        const {multiSelectActionsStyle} = this.props;
+        const iconSize = multiSelectActionsStyle ? multiSelectActionsStyle.iconSize : 30;
+        const foregroundColor = multiSelectActionsStyle ? multiSelectActionsStyle.foregroundColor : 'white';
+        const backgroundColor = multiSelectActionsStyle ? multiSelectActionsStyle.backgroundColor : 'black';
 
         return (
             <View style={styles.container}>
-
-                <SwitchView visible={this.state.multiSelectMode} >
+                <SwitchView visible={this.state.multiSelectMode}>
                     <ContextualActionBar
-                        iconSize={multiSelectActionsStyle.iconSize}
-                        foregroundColor={multiSelectActionsStyle.foregroundColor}
-                        backgroundColor={multiSelectActionsStyle.backgroundColor}
+                        iconSize={iconSize}
+                        foregroundColor={foregroundColor}
+                        backgroundColor={backgroundColor}
                         onRequestCancel={this.onRequestCancel}
                         count={this.state.selectedIndex.length}
                         actions={this.getMultiSelectAction()}
@@ -144,22 +164,23 @@ export default class MediaLister extends AppComponent {
 
                 <SwitchView visible={this.state.data != null}>
                     <MultiSelectFlatList
-                        contentContainerStyle={{marginHorizontal: 2}}
+                        data={this.state.data.map(d => 'file://' + d)}
+                        renderItem={this.renderThumbnail}
+                        numColumns={this.isPortrait() ? 2 : 4}
+                        onPressItem={this.onPressItem}
                         ref={'multiSelectList'}
+                        refreshControl={this.getRefreshControl()}
                         onEnterMultiSelectMode={this.onEnterMultiSelectMode}
                         onExitMultiSelectMode={this.onExitMultiSelectMode}
                         onSelectionChange={this.onSelectionChange}
+                        contentContainerStyle={{marginHorizontal: 2}}
                         key={this.state.orientation}
-                        numColumns={this.isPortrait() ? 2 : 4}
-                        data={this.state.data.map(d => 'file://' + d)}
-                        keyExtrator={({ item }) => item}
-                        renderItem={this.renderThumbnail}
-                        refreshControl={this.getRefreshControl()}
+                        keyExtrator={({item}) => item}
                     />
                 </SwitchView>
 
                 <SwitchView visible={showNoMediaMessage}>
-                    <View style={{ position: 'absolute', bottom: this.state.screenWidth / 2 }}>
+                    <View style={{position: 'absolute', bottom: this.state.screenWidth / 2}}>
                         {this.props.NoMediaComponent}
                     </View>
                 </SwitchView>
@@ -171,10 +192,34 @@ export default class MediaLister extends AppComponent {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    mediaViewer: {
+        flex: 1,
+        backgroundColor: 'black'
+    },
+    center: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    videoThumbnail: {
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        padding: 10
+    },
+    videoIndicator: {
+        borderWidth: 1,
+        borderColor: 'black',
+        elevation: 5
+    },
+    headerContainer: {
+        flex: 1,
+        paddingHorizontal: 15,
+        justifyContent: 'center',
+        flexDirection: 'row'
     }
 });
 
-MediaLister.propTypes = {
+Gallery.propTypes = {
     path: PropTypes.string.isRequired,
     filterData: PropTypes.func,
     onEnterMultiSelectMode: PropTypes.func.isRequired,
@@ -191,15 +236,21 @@ MediaLister.propTypes = {
         foregroundColor: PropTypes.string.isRequired,
         backgroundColor: PropTypes.string.isRequired,
         iconSize: PropTypes.number
-    })
+    }),
+    immersiveMode: PropTypes.bool,
+    hideStatusbar: PropTypes.bool,
+    onPressItem: PropTypes.func
 };
 
-MediaLister.defaultProps = {
+Gallery.defaultProps = {
     dataRefreshRate: 5000, // should get from a config file later
     filterData: data => data,
     NoMediaComponent: null,
     multiSelectActions: [],
-    onRequestCancelMultiSelect: () => { },
-    onMultiSelectSelectionChange: () => { },
-    multiSelectActionsStyle: {}
-}
+    onRequestCancelMultiSelect: () => {
+    },
+    onMultiSelectSelectionChange: () => {
+    },
+    immersiveMode: false,
+    hideStatusbar: false
+};

@@ -70,9 +70,9 @@ export default class VideoViewer extends AppComponent {
                         </View>
                     </SwitchView>
 
-                    <SwitchView visible={this.props.renderHeader} >
+                    <SwitchView visible={this.props.getHeaderRenderer} >
                         <View style={styles.header}>
-                            {this.props.renderHeader && this.props.renderHeader()}
+                            {this.props.getHeaderRenderer && this.props.getHeaderRenderer()}
                         </View>
                     </SwitchView>
 

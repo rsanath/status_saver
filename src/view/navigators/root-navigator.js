@@ -1,13 +1,27 @@
 import React from 'react';
-import { createMaterialTopTabNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
+import {createStackNavigator, createAppContainer, createBottomTabNavigator} from "react-navigation";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import theme from '../theme/theme'
-import whatsappStatusScreen from '../screens/whatsapp/whatsapp-status-screen';
+import theme from '../theme/theme';
+import WhatsappStatusScreen from '../screens/whatsapp/whatsapp-status-screen';
+import StatusViewerScreen from '../screens/whatsapp/status-viewer-screen';
 
 
-const AppNavigator = createBottomTabNavigator({
-    whatsapp: whatsappStatusScreen
+const WhatsAppNavigator = createStackNavigator({
+    WhatsappStatus: {
+        screen: WhatsappStatusScreen
+    },
+    StatusViewer: {
+        screen: StatusViewerScreen
+    }
+}, {
+    headerMode: 'none'
 });
 
-export default createAppContainer(AppNavigator);
+const AppNavigator = createBottomTabNavigator({
+    whatsapp: WhatsAppNavigator
+}, {
+    tabBarComponent: null
+});
+
+export default createAppContainer(WhatsAppNavigator);

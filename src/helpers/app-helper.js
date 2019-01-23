@@ -29,42 +29,6 @@ const getFileName = uri => {
 
 export const toast = msg => ToastAndroid.show(msg, ToastAndroid.SHORT)
 
-export const shareImage = (path, message = '') => {
-    try {
-        NativeModules.ImageShareModule.shareImage(path, message);
-    } catch (e) {
-        notifyError(e)
-        toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
-    }
-}
-
-export const shareImages = (images, message = '') => {
-    try {
-        NativeModules.ImageShareModule.shareImages(images, message);
-    } catch (e) {
-        notifyError(e)
-        toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
-    }
-}
-
-export const shareVideo = (path, message = '') => {
-    try {
-        NativeModules.ImageShareModule.shareVideo(path, message);
-    } catch (e) {
-        notifyError(e)
-        toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
-    }
-}
-
-export const shareVideos = (videos, message = '') => {
-    try {
-        NativeModules.ImageShareModule.shareVideos(videos, message);
-    } catch (e) {
-        notifyError(e)
-        toast(t('shareFailureMsg') + '\nErrMsg: ' + e.toString())
-    }
-}
-
 export const getHeightForFullWidth = (imgWidth, imgHeight) => {
     let { width } = Dimensions.get('window');
     return width * (imgHeight / imgWidth);

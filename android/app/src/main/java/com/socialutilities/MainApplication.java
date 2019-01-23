@@ -12,6 +12,7 @@ import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.sbugert.rnadmob.RNAdMobPackage;
+import com.socialutilities.modules.viewutil.ViewUtilPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new ReactVideoPackage(),
             new SharePackage(),
+            new ViewUtilPackage(),
             new FileSystemPackage());
     }
 

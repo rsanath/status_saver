@@ -1,24 +1,24 @@
 import React from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, Image, View, Text} from 'react-native';
 import AppComponent from '../app-component';
 import MediaViewer from "../components/media-viewer";
 import {listContent} from "../../helpers/file-system-helper";
 import Constants from "../../constants";
 import SwitchView from "../components/switch-view";
 import IconButton from "../components/widgets/icon-button";
-import MediaLister from '../components/media-lister';
+import Gallery from '../components/gallery';
 
 export default class TestScreen extends AppComponent {
 
     componentDidMount(): void {
-        listContent(Constants.WHATSAPP_STATUS_PATH)
+        listContent(Constants.WHATSAPP_BUSINESS_STATUS_PATH)
             .then(items => this.setState({data: items.map(i => 'file://' + i)}))
     }
 
     renderHeader = () => {
         return (
-            <View style={styles.header} >
-                <IconButton name={'share'} size={30} color={'white'} onPress={() => alert('on save press')} />
+            <View style={styles.header}>
+                <IconButton name={'share'} size={30} color={'white'} onPress={() => alert('on save press')}/>
             </View>
         )
     };
@@ -27,15 +27,14 @@ export default class TestScreen extends AppComponent {
         return (
             <View style={styles.container}>
 
-                <MediaLister path={Constants.WHATSAPP_STATUS_PATH} />
-
-                <SwitchView visible={this.state.data && false} >
-                    <MediaViewer
-                        videoProgressbarColor={this.theme.colors.primary}
-                        renderHeader={this.renderHeader}
-                        renderFooter={this.renderHeader}
-                        media={this.state.data || []}/>
-                </SwitchView>
+                <Gallery
+                    onEnterMultiSelectMode={() => {
+                    }}
+                    onExitMultiSelectMode={() => {
+                    }}
+                    multiSelectActionsStyle={{foregroundColor: 'white', backgroundColor: this.theme.colors.secondary}}
+                    NoMediaComponent={<Text>ape</Text>}
+                    path={Constants.WHATSAPP_STATUS_PATH}/>
             </View>
         );
     }

@@ -104,7 +104,8 @@ export default class MultiSelectFlatList extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={() => this._onPress(item)}
-                onLongPress={() => this._onLongPress(item)} >
+                onLongPress={() => this._onLongPress(item)}
+            >
                 <HighlightableView
                     style={this.props.highlightStyle}
                     highlight={this.state.multiSelectMode && this.state.selectedIndexes.contains(item.index)}>

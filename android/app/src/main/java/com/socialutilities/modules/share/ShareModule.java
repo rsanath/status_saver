@@ -17,27 +17,29 @@ import java.util.ArrayList;
 
 public class ShareModule extends ReactContextBaseJavaModule {
 
+    private static final String PROVIDER_NAME = "com.whatsappstatussaver.provider";
+
     public ShareModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "ImageShareModule";
+        return "MediaShareModule";
     }
 
     @ReactMethod
-    public void shareImage(String uriToImage, String message) {
+    public void shareMedia(String uriToMedia, String mimeType, String message) {
         Activity context = getCurrentActivity();
 
-        File cacheFile = new File(uriToImage);
-        Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", cacheFile);
+        File cacheFile = new File(uriToMedia);
+        Uri uri = FileProvider.getUriForFile(context, PROVIDER_NAME, cacheFile);
         Intent intent = ShareCompat.IntentBuilder.from(context)
-                .setType("image/jpg")
+                .setType(mimeType)
                 .setSubject(message)
                 .setText(message)
                 .setStream(uri)
-                .setChooserTitle("Share via")
+                .setChooserTitle("Share Via")
                 .createChooserIntent()
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
@@ -45,19 +47,19 @@ public class ShareModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void shareImages(ReadableArray uriToImages, String message) {
+    public void shareMedia(ReadableArray uriToMedia, String mimeType, String message) {
         Activity context = getCurrentActivity();
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND_MULTIPLE);
         intent.putExtra(Intent.EXTRA_SUBJECT, message);
-        intent.setType("image/jpeg");
+        intent.setType(mimeType);
 
         ArrayList<Uri> files = new ArrayList<Uri>();
 
-        for (int i = 0; i < uriToImages.size(); i++) {
-            File file = new File(uriToImages.getString(i));
-            Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", file);
+        for (int i = 0; i < uriToMedia.size(); i++) {
+            File file = new File(uriToMedia.getString(i));
+            Uri uri = FileProvider.getUriForFile(context, PROVIDER_NAME, file);
             files.add(uri);
         }
 
@@ -65,45 +67,4 @@ public class ShareModule extends ReactContextBaseJavaModule {
 
         context.startActivity(intent);
     }
-
-    @ReactMethod
-    public void shareVideo(String uriToImage, String message) {
-        Activity context = getCurrentActivity();
-
-        File cacheFile = new File(uriToImage);
-        Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", cacheFile);
-        Intent intent = ShareCompat.IntentBuilder.from(context)
-                .setType("video/mp4")
-                .setSubject(message)
-                .setText(message)
-                .setStream(uri)
-                .setChooserTitle("Share via")
-                .createChooserIntent()
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        context.startActivity(intent);
-    }
-
-    @ReactMethod
-    public void shareVideos(ReadableArray uriToVideos, String message) {
-        Activity context = getCurrentActivity();
-
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND_MULTIPLE);
-        intent.putExtra(Intent.EXTRA_SUBJECT, message);
-        intent.setType("video/mp4");
-
-        ArrayList<Uri> files = new ArrayList<Uri>();
-
-        for (int i = 0; i < uriToVideos.size(); i++) {
-            File file = new File(uriToVideos.getString(i));
-            Uri uri = FileProvider.getUriForFile(context, "com.whatsappstatussaver.provider", file);
-            files.add(uri);
-        }
-
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
-
-        context.startActivity(intent);
-    }
-
 }
