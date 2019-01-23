@@ -5,10 +5,6 @@ import MediaViewer from '../../components/media-viewer';
 
 
 export default class StatusViewerScreen extends React.Component {
-    static navigationOptions = ({navigation}) => ({
-        tabBarVisible: false
-    });
-
     constructor(props) {
         super(props);
         const params = props.navigation.getParam('props', null);

@@ -107,7 +107,6 @@ export default class MediaViewer extends React.Component {
                 renderHeader={() => this.props.renderHeader(path, index)}
                 onStart={() => {
                     this.setState({currentVideo: ref, showHeaderFooter: false})
-                    console.log('video ref said')
                 }}
                 onEnd={() => this.setState({currentVideo: null, showHeaderFooter: true})}
                 // so that the screen doesn't move while seeking.
@@ -144,9 +143,7 @@ export default class MediaViewer extends React.Component {
     };
 
     stopPlayingVideo = () => {
-        console.log('in stop playing video');
         if (this.state.currentVideo) {
-            console.log('stopping video');
             this.state.currentVideo.stop();
             this.setState({currentVideo: null})
         }
@@ -160,9 +157,7 @@ export default class MediaViewer extends React.Component {
     };
 
     onViewableItemsChanged = ({viewableItems, changed}) => {
-        console.log('in onViewableItemsChanged')
         if (viewableItems.length > 0) {
-            console.log('viewable item changed')
             const viewableItem = viewableItems[0];
             this.onPageSelected(viewableItem)
         }

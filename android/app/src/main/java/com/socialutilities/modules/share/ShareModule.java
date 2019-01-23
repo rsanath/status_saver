@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class ShareModule extends ReactContextBaseJavaModule {
 
-    private static final String PROVIDER_NAME = "com.whatsappstatussaver.provider";
+    private static final String PROVIDER_NAME = "com.socialutilities.provider";
 
     public ShareModule(ReactApplicationContext reactContext) {
         super(reactContext);

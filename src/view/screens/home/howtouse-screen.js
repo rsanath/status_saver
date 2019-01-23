@@ -26,7 +26,7 @@ export default class HowToUseScreen extends Component {
         </View>
 
         <TouchableOpacity onPress={() => this.sendMailToSupport()} >
-          <Text style={styles.button} >{t('labels.sendFeedback').toUpperCase()}</Text>
+          <Text style={styles.button} >{t('screens.howtouse.sendFeedback').toUpperCase()}</Text>
         </TouchableOpacity>
       </ScrollView>
     );

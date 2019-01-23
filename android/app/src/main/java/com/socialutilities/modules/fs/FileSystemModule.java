@@ -1044,6 +1044,23 @@ public class FileSystemModule extends ReactContextBaseJavaModule {
         task.execute(paths);
     }
 
+
+    /**
+     * Delete a file from system
+     * @param path
+     * @param callback
+     */
+    @ReactMethod
+    public void rm(String path, Callback callback) {
+        File f = new File(path);
+        if (f.exists()) {
+            boolean deleted = f.delete();
+            callback.invoke(deleted);
+            return;
+        }
+        callback.invoke(false);
+    }
+
     /**
      * String to byte converter method
      * @param data  Raw data in string format

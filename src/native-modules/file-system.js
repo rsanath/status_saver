@@ -79,11 +79,18 @@ function cp(path, dest) {
     })
 }
 
+export function rm(path) {
+    return new Promise((resolve, reject) => {
+        fs.rm(path, resolve)
+    })
+}
+
 export default {
     lstat,
     exists,
     mkdir,
     isDir,
     ls,
-    cp
+    cp,
+    rm
 }

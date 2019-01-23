@@ -14,9 +14,11 @@ import Gallery from '../../components/gallery';
 import Constants from "../../../constants";
 import IconButton from "../../components/widgets/icon-button";
 
+import {getFileInfoAsString} from '../../../helpers/app-helper';
 import fs from '../../../native-modules/file-system';
 import CommonUtil from "../../../utils/common-utils";
 import {notifyError} from "../../../helpers/bugsnag-helper";
+import ShareModule from "../../../native-modules/share-module";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -26,45 +28,54 @@ class WhatsAppStatusScreen extends AppComponent {
             index,
             media: data,
             immersiveMode: false,
-            renderFooter: () => this.renderFooter(item),
-            renderHeader: () => this.renderHeader(item)
+            renderFooter: this.renderFooter,
+            renderHeader: this.renderHeader
         };
         this.props.navigation.navigate('StatusViewer', {props})
     };
 
     onPressInfo = async path => {
-        const info = (await fs.lstat(path))[0];
-
-        const message = `Path: ${info.path}\n\nLastModified: ${info.lastModified}`;
-
-        Alert.alert(info.filename, message)
+        Alert.alert(
+            this.t('labels.fileInfo'),
+            await getFileInfoAsString(path)),
+            [],
+            {cancelable: true}
     };
 
     onPressDelete = path => {
-
+        Alert.alert(
+            this.t('titles.deleteStatus'),
+            this.t('messages.deleteStatus'),
+            [
+                {text: this.t('labels.cancel'), onPress: null, style: 'cancel'},
+                {text: this.t('labels.delete'), onPress: () => fs.rm(path).then(() => this.toast('Deleted'))},
+            ],
+            {cancelable: true}
+        )
     };
 
     onPressSave = async (path) => {
-        console.log(path);
-        console.log(Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path))
-
         const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
         if (!exist) {
             await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
         }
 
+        this.toast(CommonUtil.getFileName(path));
+
         fs.cp(path, Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path))
             .then(() => {
-                this.toast('Saved.')
+                this.toast(this.t('messages.saveSuccess'))
             })
             .catch(e => {
                 notifyError(e);
-                this.toast('Unable to save\nMessage: ' + e.message);
+                this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
             })
     };
 
     onPressShare = path => {
-
+        const type = CommonUtil.getMediaType(path);
+        const mime = type == 'video' ? 'video/mp4' : 'image/jpg';
+        ShareModule.shareMedia(path, mime)
     };
 
     renderHeader = function (path) {
@@ -77,6 +88,7 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     renderFooter = path => {
+        console.log(path)
         return (
             <View style={styles.header}>
                 <IconButton
