@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
 });
 
 MediaViewer.propTypes = {
-    media: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    data: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     containerStyle: PropTypes.object,
     fallbackComponent: PropTypes.instanceOf(React.Component),
     renderHeader: PropTypes.func,

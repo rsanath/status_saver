@@ -3,7 +3,7 @@ import {checkAndCreateDir} from './file-system-helper';
 import {NativeModules} from 'react-native';
 import {t} from '../i18n/i18n';
 import {get} from '../api/firebase';
-import {notifyError} from './bugsnag-helper';
+import {notifyError} from './exceptions-helper';
 import fs from '../native-modules/file-system';
 
 

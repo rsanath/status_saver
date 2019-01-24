@@ -1,56 +1,56 @@
-import { t } from '../i18n/i18n';
-import C from '../constants';
-import { copyFile, toast, copyFiles } from './app-helper';
-import { notifyError } from './bugsnag-helper';
-import fs from '../native-modules/file-system';
+import Constants from "../constants";
+import fs from "../native-modules/file-system";
+import CommonUtil from "../utils/common-utils";
+import {notifyError} from "./exceptions-helper";
 
-export const getStatuses = path => {
-    return fs.lstat(path)
-        .then(files => sortByLatestFirst(files))
-        .then(files => files.map(file => file.path))
-        .catch(notifyError)
-}
+const WhatsAppTypes = {
+    WHATSAPP: 'WhatsApp',
+    WHATSAPP_BUSINESS: 'WhatsApp Business',
+    GB_WHATSAPP: 'GB WhatsApp'
+};
 
-export const getPhotoStatuses = async path => {
-    const statuses = await getStatuses(path)
-    return statuses.filter(status => isPhoto(status))
-}
+const getPathForWhatsAppType = type => {
+    const pathMap = {};
+    pathMap[WhatsAppTypes.WHATSAPP] = Constants.WHATSAPP_STATUS_PATH;
+    pathMap[WhatsAppTypes.GB_WHATSAPP] = Constants.GBWHATSAPP_STATUS_PATH;
+    pathMap[WhatsAppTypes.WHATSAPP_BUSINESS] = Constants.WHATSAPP_BUSINESS_STATUS_PATH;
+    return pathMap[type];
+};
 
-export const getVideoStatuses = async path => {
-    const statuses = await getStatuses(path)
-    return statuses.filter(status => isVideo(status))
-}
-
-const isPhoto = file => {
-    const parts = file.split('.')
-    const ext = parts[parts.length - 1]
-    return ext == 'jpg'
-}
-
-const isVideo = file => {
-    const parts = file.split('.')
-    const ext = parts[parts.length - 1]
-    return ext == 'mp4'
-}
-
-export const saveWhatsAppStatus = status => {
-    copyFile(status, C.APP_DATA_PATH)
-        .then(() => toast(t('statusSaveSuccessMsg')))
+const saveMultipleStatus = async (items) => {
+    const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
+    if (!exist) {
+        await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
+    }
+    let saves = items.map(item => {
+        let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(item);
+        return fs.cp(item, dest);
+    });
+    return Promise.all(saves)
         .catch(e => {
-            notifyError(e)
-            toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString())
+            notifyError(e);
+            throw e
         })
-}
+};
 
-export const saveWhatsAppStatuses = statuses => {
-    copyFiles(statuses, C.APP_DATA_PATH)
-        .then(() => toast(t('statusSaveSuccessMsg')))
+const saveStatus = async (path) => {
+    const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
+    if (!exist) {
+        await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
+    }
+    let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path);
+    return fs.cp(path, dest)
         .catch(e => {
-            notifyError(e)
-            toast(t('statusSaveFailureMsg') + '\nErrMsg: ' + e.toString())
+            notifyError(e);
+            throw e
         })
-}
+};
 
-const sortByLatestFirst = files => {
-    return files.sort((a, b) => b.lastModified - a.lastModified)
-}
+const WhatsAppHelper = {
+    WhatsAppTypes,
+    getPathForWhatsAppType,
+    saveMultipleStatus,
+    saveStatus
+};
+
+export default WhatsAppHelper;

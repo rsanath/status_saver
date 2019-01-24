@@ -1,5 +1,5 @@
 import fs from '../native-modules/file-system';
-import notifyError from './bugsnag-helper';
+import notifyError from './exceptions-helper';
 
 const sortByLatestFirst = files => {
     return files.sort((a, b) => b.lastModified - a.lastModified)

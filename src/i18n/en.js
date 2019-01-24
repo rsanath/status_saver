@@ -44,7 +44,13 @@ export default {
     screens: {
         whatsApp: {
             photoStatusTitle: 'Photos',
-            videoStatusTitle: 'Videos'
+            videoStatusTitle: 'Videos',
+            titles: {
+                noStatus: 'No Status Available'
+            },
+            messages: {
+                noStatus: '%{type} status folder not found.\nPlease make sure you have the app and you have viewed any status before trying again.'
+            }
         },
         howtouse: {
             title: 'How To Use',

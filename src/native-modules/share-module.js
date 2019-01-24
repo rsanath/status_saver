@@ -1,5 +1,5 @@
 import {NativeModules} from "react-native";
-import {notifyError} from "../helpers/bugsnag-helper";
+import {notifyError} from "../helpers/exceptions-helper";
 import {t} from "../i18n/i18n";
 import {toast} from "../helpers/app-helper";
 

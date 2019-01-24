@@ -19,10 +19,12 @@ import IconButton from "../../components/widgets/icon-button";
 import {getFileInfoAsString} from '../../../helpers/app-helper';
 import fs from '../../../native-modules/file-system';
 import CommonUtil from "../../../utils/common-utils";
-import {notifyError} from "../../../helpers/bugsnag-helper";
+import {notifyError} from "../../../helpers/exceptions-helper";
 import ShareModule from "../../../native-modules/share-module";
 import MediaViewer from "../../components/media-viewer";
 import TitleBar from "../../components/titlebar";
+import {WhatsAppActions} from "../../../redux/actions/whatsapp-actions";
+import WhatsAppHelper from "../../../helpers/whatsapp-helper";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -47,26 +49,28 @@ class WhatsAppStatusScreen extends AppComponent {
         this.setState({multiSelectItems: [], multiSelectMode: false})
     };
 
-    onSaveMultiple = async (items) => {
-        const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
-        if (!exist) {
-            await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
+    onChangeStatusSource = async (type) => {
+        const path = WhatsAppHelper.getPathForWhatsAppType(type);
+        const exists = await fs.exists(path);
+        if (!exists) {
+            Alert.alert(this.t('screens.whatsApp.titles.noStatus'), this.t('screens.whatsApp.messages.noStatus', {type}));
+            return;
         }
-        let saves = items.map(item => {
-            let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(item);
-            return fs.cp(item, dest);
-        });
-        Promise.all(saves)
+        this.props.changeWhatsAppType(path)
+        this.refs.gallery.fetchData();
+    };
+
+    onSaveMultiple = async (items) => {
+        WhatsAppHelper.saveMultipleStatus(items)
             .then(() => this.toast(this.t('messages.saveSuccess')))
             .catch(e => {
-                notifyError(e);
                 this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
             })
     };
 
     onShareMultiple = (items) => {
         ShareModule.shareMultipleMedia(items, 'images/*')
-    }
+    };
 
     onPressItem = (item, index, data) => {
         this.setState({selectedIndex: index, mediaViewerVisible: true})
@@ -84,6 +88,7 @@ class WhatsAppStatusScreen extends AppComponent {
         const deleteFile = () => {
             fs.rm(path)
                 .then(() => {
+                    this.refs.gallery.fetchData();
                     this.toast('Deleted')
                 })
         };
@@ -100,15 +105,9 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     onPressSave = async (path) => {
-        const exist = await fs.exists(Constants.WHATSAPP_STATUS_SAVE_PATH);
-        if (!exist) {
-            await fs.mkdir(Constants.WHATSAPP_STATUS_SAVE_PATH);
-        }
-        let dest = Constants.WHATSAPP_STATUS_SAVE_PATH + '/' + CommonUtil.getFileName(path);
-        fs.cp(path, dest)
+        WhatsAppHelper.saveStatus(path)
             .then(() => this.toast(this.t('messages.saveSuccess')))
             .catch(e => {
-                notifyError(e);
                 this.toast(this.t('messages.saveFailure') + '\nMessage: ' + e.message);
             })
     };
@@ -124,6 +123,19 @@ class WhatsAppStatusScreen extends AppComponent {
             {iconName: 'content-save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)},
             {iconName: 'share-variant', onPress: () => this.onShareMultiple(this.state.multiSelectItems)},
         ]
+    };
+
+    getTitleBarMenu = () => {
+        return [{
+            name: 'WhatsApp Status',
+            onSelect: () => this.onChangeStatusSource(WhatsAppHelper.WhatsAppTypes.WHATSAPP)
+        }, {
+            name: 'GB WhatsApp Status',
+            onSelect: () => this.onChangeStatusSource(WhatsAppHelper.WhatsAppTypes.GB_WHATSAPP)
+        }, {
+            name: 'WhatsApp Business Status',
+            onSelect: () => this.onChangeStatusSource(WhatsAppHelper.WhatsAppTypes.WHATSAPP_BUSINESS)
+        }];
     };
 
     renderHeader = function (path) {
@@ -206,6 +218,7 @@ class WhatsAppStatusScreen extends AppComponent {
                 {...this.componentProps.titleBar}
                 title={'WhatsApp Status Saver'}
                 containerStyle={styles.titleBarStyle}
+                menu={this.getTitleBarMenu()}
             />
         )
     };
@@ -241,6 +254,8 @@ class WhatsAppStatusScreen extends AppComponent {
                 {this.renderTitleBar()}
                 {this.renderMediaViewer()}
                 <Gallery
+                    ref={'gallery'}
+                    containerStyle={{backgroundColor: this.theme.screens.global.backgroundColor}}
                     path={this.props.statusSource}
                     dataRefreshRate={Constants.MEDIA_REFRESH_RATE}
                     onPressItem={this.onPressItem}
@@ -278,4 +293,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({whatsapp}) => ({...whatsapp});
 
-export default connect(mapStateToProps)(WhatsAppStatusScreen);
+const mapDispatchToProps = dispatch => {
+    return {
+        changeWhatsAppType: (source) => dispatch(WhatsAppActions.changeWhatsAppType(source))
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WhatsAppStatusScreen);

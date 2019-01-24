@@ -1,8 +1,7 @@
 const colors = {
+    primaryLight: "#00766a",
     primary: '#075e55',
     primaryDark: "#054c44",
-    secondary: "#00887a",
-    secondaryDark: "#00766a",
     accent: '#fff',
     textColor: '#000',
     componentColor: '#000',
@@ -12,6 +11,9 @@ const colors = {
 export default {
     colors,
     screens: {
+        global: {
+            backgroundColor: '#ffffff'
+        },
         whatsapp: {
             backgroundColor: '#fff',
             statusBarColor: '#161616',
@@ -28,8 +30,7 @@ export default {
     },
     containers: {
         screen: {
-            flex: 1,
-            backgroundColor: 'white',
+            flex: 1
         }
     }
 };

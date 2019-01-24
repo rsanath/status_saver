@@ -1,6 +1,4 @@
 == todos ==
-1. refresh data immediately inside the media viewer screen where
-    the source data has changed in the whatsapp-media-screen.
 
 
 == bug fix ==
@@ -9,3 +7,9 @@
 
 
 == features ==
+
+
+
+== completed ==
+
+refresh data immediately inside the media viewer screen where the source data has changed in the whatsapp-media-screen.

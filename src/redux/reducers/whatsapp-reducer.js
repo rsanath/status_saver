@@ -9,7 +9,7 @@ const initialState = {
 
 export default function WhatsAppReducer(state = initialState, action) {
     switch (action.type) {
-        case WhatsAppConstants.CHANGE_STATUS_SOURCE:
+        case WhatsAppConstants.CHANGE_WHATSAPP_SOURCE:
             return {
                 ...state,
                 statusSource: action.payload

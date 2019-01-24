@@ -59,7 +59,7 @@ export default class Gallery extends AppComponent {
         this.props.onPressItem && this.props.onPressItem(this.state.data[index], index, this.state.data)
     };
 
-    refreshData = async () => {
+    _refreshData = async () => {
         this.setState({fetchingData: true});
 
         let data = await listContent(this.props.path);
@@ -144,7 +144,7 @@ export default class Gallery extends AppComponent {
         return (
             <RefreshControl
                 colors={this.props.refreshColor}
-                onRefresh={this.refreshData}
+                onRefresh={this._refreshData}
                 refreshing={this.state.fetchingData}
             />
         )
@@ -154,7 +154,8 @@ export default class Gallery extends AppComponent {
         const showNoMediaMessage = this.state.data && this.state.data.length > 0;
 
         return (
-            <View style={styles.container}>
+            <View
+                style={[this.props.containerStyle, styles.container]}>
                 <SwitchView visible={this.state.multiSelectMode}>
                     <ContextualActionBar
                         onRequestCancel={this.onRequestCancel}
@@ -195,7 +196,7 @@ export default class Gallery extends AppComponent {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     mediaViewer: {
         flex: 1,

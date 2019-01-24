@@ -16,7 +16,7 @@ import C from '../../../constants';
 import store from '../../../redux/store';
 import {StatusActions} from '../../../redux/actions/status-actions';
 import {t} from '../../../i18n/i18n';
-import {notifyError} from '../../../helpers/bugsnag-helper';
+import {notifyError} from '../../../helpers/exceptions-helper';
 import {isStoragePermissionGranted} from '../../../helpers/permissions-helper';
 
 

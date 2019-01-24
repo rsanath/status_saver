@@ -6,7 +6,7 @@ import {Provider as StoreProvider} from 'react-redux';
 import AppNavigator from './src/view/navigators/root-navigator';
 
 import store from './src/redux/store';
-import {notifyError} from './src/helpers/bugsnag-helper';
+import {notifyError} from './src/helpers/exceptions-helper';
 import TestScreen from './src/view/screens/test-screens';
 
 

@@ -6,4 +6,4 @@ I18n.translations = {
   en
 };
 
-export const t = key => I18n.t(key)
+export const t = (key, params) => I18n.t(key, params)

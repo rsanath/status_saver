@@ -1,6 +1,6 @@
 import { get } from '../api/firebase'
 import config from '../../config';
-import { notifyError } from './bugsnag-helper';
+import { notifyError } from './exceptions-helper';
 
 export const getAdConfig = () => {
     return get(config.routes.appRoute + '/config/ads')
