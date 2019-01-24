@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BackHandler, TouchableWithoutFeedback, Vibration } from 'react-native';
+import { BackHandler, TouchableOpacity, Vibration } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
@@ -102,16 +102,18 @@ export default class MultiSelectFlatList extends Component {
 
     _renderItem = (item) => {
         return (
-            <TouchableWithoutFeedback
+            <TouchableOpacity
+                activeOpacity={0.9}
                 onPress={() => this._onPress(item)}
                 onLongPress={() => this._onLongPress(item)}
             >
                 <HighlightableView
-                    style={this.props.highlightStyle}
-                    highlight={this.state.multiSelectMode && this.state.selectedIndexes.contains(item.index)}>
+                    {...this.props.highlightableViewProps}
+                    highlight={this.state.multiSelectMode && this.state.selectedIndexes.contains(item.index)}
+                >
                     {this.props.renderItem(item)}
                 </HighlightableView>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         )
     }
 
@@ -156,7 +158,8 @@ MultiSelectFlatList.propTypes = {
     onCancelMultiSelect: PropTypes.func,
     highlightStyle: PropTypes.object,
     multiSelectEnabled: PropTypes.bool,
-    vibrationsEnabled: PropTypes.bool
+    vibrationsEnabled: PropTypes.bool,
+    highlightableViewProps: PropTypes.object
 }
 
 MultiSelectFlatList.defaultProps = {

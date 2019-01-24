@@ -61,7 +61,10 @@ export default class MediaViewer extends React.Component {
         }
 
         return (
-            <TouchableWithoutFeedback key={item} onPress={this.toggleHeaderFooter}>
+            <TouchableWithoutFeedback
+                style={{backgroundColor: 'pink'}}
+                key={item}
+                onPress={this.toggleHeaderFooter}>
                 <View key={item} style={styles.container}>
                     {media}
                     {this.renderHeaderFooter(item, index)}
@@ -74,7 +77,7 @@ export default class MediaViewer extends React.Component {
         return (
             <Image
                 key={path}
-                style={[styles.image]}
+                style={[styles.image, {backgroundColor: this.props.backgroundColor}]}
                 resizeMode={'contain'}
                 source={{uri: 'file://' + path}}
             />
@@ -100,7 +103,7 @@ export default class MediaViewer extends React.Component {
             <VideoPlayer
                 video={uri}
                 thumbnail={uri}
-                style={[styles.video]}
+                style={[styles.video, {backgroundColor: this.props.backgroundColor}]}
                 customStyles={customStyles}
                 renderFooter={() => this.props.renderFooter(path, index)}
                 renderHeader={() => this.props.renderHeader(path, index)}
@@ -233,7 +236,8 @@ MediaViewer.propTypes = {
     index: PropTypes.number,
     onPageChange: PropTypes.func,
     hideStatusbar: PropTypes.bool,
-    immersiveMode: PropTypes.bool
+    immersiveMode: PropTypes.bool,
+    backgroundColor: PropTypes.string
 };
 
 MediaViewer.defaultProps = {
@@ -241,5 +245,6 @@ MediaViewer.defaultProps = {
     videoProgressbarColor: 'white',
     index: 0,
     hideStatusbar: false,
-    immersiveMode: false
+    immersiveMode: false,
+    backgroundColor: '#000'
 };

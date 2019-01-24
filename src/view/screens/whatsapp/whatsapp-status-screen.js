@@ -22,6 +22,7 @@ import CommonUtil from "../../../utils/common-utils";
 import {notifyError} from "../../../helpers/bugsnag-helper";
 import ShareModule from "../../../native-modules/share-module";
 import MediaViewer from "../../components/media-viewer";
+import TitleBar from "../../components/titlebar";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -31,6 +32,7 @@ class WhatsAppStatusScreen extends AppComponent {
         this.state = {
             data: [],
             selectedIndex: 0,
+            multiSelectMode: false,
             mediaViewerVisible: false
         }
     }
@@ -42,7 +44,7 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     clearMultiSelectItems = () => {
-        this.setState({multiSelectItems: []})
+        this.setState({multiSelectItems: [], multiSelectMode: false})
     };
 
     onSaveMultiple = async (items) => {
@@ -125,38 +127,47 @@ class WhatsAppStatusScreen extends AppComponent {
     };
 
     renderHeader = function (path) {
+        const colors = this.theme.screens.whatsapp;
         const onPress = () => this.setState({mediaViewerVisible: false});
+
         return (
-            <View style={{flex: 1, flexDirection: 'row'}}>
-                <IconButton name={'chevron-down'} size={50} color={'white'} onPress={onPress}/>
+            <View style={{flex: 1, flexDirection: 'row', backgroundColor: colors.mediaViewerHeaderFooterColor}}>
+                <IconButton
+                    name={'chevron-down'}
+                    size={50}
+                    color={colors.mediaViewerFgColor}
+                    onPress={onPress}
+                />
             </View>
         )
     };
 
     renderFooter = path => {
+        const colors = this.theme.screens.whatsapp;
+
         return (
-            <View style={styles.header}>
+            <View style={[styles.header, {backgroundColor: colors.mediaViewerHeaderFooterColor}]}>
                 <IconButton
                     name={'information'}
-                    color={'white'}
+                    color={colors.mediaViewerFgColor}
                     size={30}
                     style={styles.icon}
                     onPress={() => this.onPressInfo(path)}/>
                 <IconButton
                     name={'delete'}
-                    color={'white'}
+                    color={colors.mediaViewerFgColor}
                     size={30}
                     style={styles.icon}
                     onPress={() => this.onPressDelete(path)}/>
                 <IconButton
                     name={'content-save'}
-                    color={'white'}
+                    color={colors.mediaViewerFgColor}
                     size={30}
                     style={styles.icon}
                     onPress={() => this.onPressSave(path)}/>
                 <IconButton
                     name={'share-variant'}
-                    color={'white'}
+                    color={colors.mediaViewerFgColor}
                     size={30}
                     style={styles.icon}
                     onPress={() => this.onPressShare(path)}/>
@@ -166,41 +177,82 @@ class WhatsAppStatusScreen extends AppComponent {
 
     renderMediaViewer = () => {
         if (!this.state.mediaViewerVisible) return null;
+        const screenTheme = this.theme.screens.whatsapp;
 
         return (
             <Modal
+                transparent={true}
                 animationType={'slide'}
                 onRequestClose={() => this.setState({mediaViewerVisible: false})}
                 visible={this.state.mediaViewerVisible}>
-                <StatusBar backgroundColor={'black'}/>
+                <StatusBar backgroundColor={screenTheme.mediaViewerBgColor}/>
                 <MediaViewer
                     index={this.state.selectedIndex}
                     data={this.state.data}
                     immersiveMode={false}
                     renderFooter={this.renderFooter}
                     renderHeader={this.renderHeader.bind(this)}
+                    backgroundColor={this.theme.screens.whatsapp.mediaViewerBgColor}
                 />
             </Modal>
         )
     };
 
-    render() {
-        const screen = Dimensions.get('screen');
-        const window = Dimensions.get('window');
+    renderTitleBar = () => {
+        if (this.state.multiSelectMode) return null;
 
         return (
-            <View style={this.theme.containers.screen}>
+            <TitleBar
+                {...this.componentProps.titleBar}
+                title={'WhatsApp Status Saver'}
+                containerStyle={styles.titleBarStyle}
+            />
+        )
+    };
+
+    componentProps = {
+        highlightableView: {
+            highlightColor: this.theme.screens.whatsapp.itemHighlightColor
+        },
+        actionBar: {
+            foregroundColor: 'black',
+            backgroundColor: 'white'
+        },
+        titleBar: {
+            backgroundColor: this.theme.screens.whatsapp.titleBarBgColor,
+            foregroundColor: this.theme.screens.whatsapp.titleBarFgColor
+        }
+    };
+
+    render() {
+        const screenTheme = this.theme.screens.whatsapp;
+        const statusBarColor = this.state.multiSelectMode ?
+            screenTheme.statusBarSelectionModeColor :
+            screenTheme.statusBarColor;
+        const statusBarStyle = CommonUtil.isLightColor(statusBarColor) ?
+            'dark-content' : 'light-content';
+
+        return (
+            <View
+                style={[this.theme.containers.screen, {backgroundColor: this.theme.screens.whatsapp.backgroundColor}]}>
+                <StatusBar
+                    barStyle={statusBarStyle}
+                    backgroundColor={statusBarColor}/>
+                {this.renderTitleBar()}
                 {this.renderMediaViewer()}
                 <Gallery
                     path={this.props.statusSource}
                     dataRefreshRate={Constants.MEDIA_REFRESH_RATE}
                     onPressItem={this.onPressItem}
-                    onEnterMultiSelectMode={() => null}
+                    onEnterMultiSelectMode={() => this.setState({multiSelectMode: true})}
                     onExitMultiSelectMode={this.clearMultiSelectItems}
                     onRequestCancelMultiSelect={this.clearMultiSelectItems}
                     onMultiSelectSelectionChange={this.onMultiSelectItemsChange}
-                    multiSelectActions={this.getMultiSelectActions()}
                     onDataChange={data => this.setState({data})}
+                    multiSelectActions={this.getMultiSelectActions()}
+                    refreshColor={[this.theme.screens.whatsapp.refreshColor]}
+                    contextualActionBarProps={this.componentProps.actionBar}
+                    highlightableViewProps={this.componentProps.highlightableView}
                 />
             </View>
         );
@@ -216,7 +268,12 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginHorizontal: 10
-    }
+    },
+    multiselectActionBarStyle: {
+        borderBottomColor: 'white',
+        borderBottomWidth: 2
+    },
+    titleBarStyle: {}
 });
 
 const mapStateToProps = ({whatsapp}) => ({...whatsapp});

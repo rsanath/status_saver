@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
         height: 54,
         alignItems: 'center',
         paddingVertical: 5,
-        paddingHorizontal: 6
+        paddingHorizontal: 6,
+        elevation: 10
     },
     actionsContainer: {
         padding: 10,

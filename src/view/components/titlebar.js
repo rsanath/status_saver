@@ -99,6 +99,7 @@ const styles = {
         paddingVertical: 5,
         paddingLeft: 6,
         paddingRight: 8,
+        elevation: 10
     },
     title: {
         fontSize: 18,
