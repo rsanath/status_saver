@@ -12,10 +12,10 @@ export default class NoStatusWidget extends Component {
                 style={[styles.container, this.props.style]}
                 {...this.props}>
                 <Image
-                    style={{ width: 200, height: 200 }}
+                    style={{ width: 200, height: 200 , margin: 10}}
                     source={require('../../assets/images/beach.png')} />
-                <Text style={styles.info} >No status available</Text>
-                <Text style={styles.info} >Watch any status on WhatsApp and come check back.</Text>
+                <Text style={styles.info} >Nothing here.</Text>
+                <Text style={styles.info} >View any status and come check back.</Text>
 
             </View>
         );
@@ -31,8 +31,8 @@ const styles = {
         alignSelf: 'center',
     },
     info: {
-        margin: 5,
-        fontSize: 16,
+        fontFamily: 'monospace',
+        fontSize: 18,
         textAlign: 'center'
     }
 }

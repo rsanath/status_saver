@@ -5,11 +5,10 @@ import {
     View,
     RefreshControl,
     StyleSheet,
-    ImageBackground,
-    Modal
+    Text,
+    Image
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Image from 'react-native-fast-image';
 
 import AppComponent from '../app-component';
 import MultiSelectFlatList from './multi-select-flatlist';
@@ -18,7 +17,6 @@ import SwitchView from './switch-view';
 import {listContent} from '../../helpers/file-system-helper';
 import CommonUtil from "../../utils/common-utils";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import FadeView from "./fade-view";
 
 
 export default class Gallery extends AppComponent {
@@ -29,7 +27,9 @@ export default class Gallery extends AppComponent {
             ...this.state,
             data: [],
             multiSelectMode: false,
-            selectedIndex: []
+            selectedIndex: [],
+            // in order to show no status icon after the first try
+            firstTimeDataFetched: false
         };
     }
 
@@ -79,7 +79,7 @@ export default class Gallery extends AppComponent {
         data = this.props.filterData(data);
 
         if (!this.state.data.equals(data)) {
-            this.setState({data});
+            this.setState({data, firstTimeDataFetched: true});
             this.props.onDataChange && this.props.onDataChange(data)
         }
     };
@@ -151,7 +151,7 @@ export default class Gallery extends AppComponent {
     };
 
     render() {
-        const showNoMediaMessage = this.state.data && this.state.data.length > 0;
+        const showNoMediaMessage = this.state.firstTimeDataFetched && this.state.data.length <= 0;
 
         return (
             <View
@@ -185,7 +185,7 @@ export default class Gallery extends AppComponent {
                 </SwitchView>
 
                 <SwitchView visible={showNoMediaMessage}>
-                    <View style={{position: 'absolute', bottom: this.state.screenWidth / 2}}>
+                    <View style={styles.noMedia}>
                         {this.props.NoMediaComponent}
                     </View>
                 </SwitchView>
@@ -226,6 +226,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         justifyContent: 'center',
         flexDirection: 'row'
+    },
+    noMedia: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

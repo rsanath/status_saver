@@ -6,33 +6,6 @@ import PropTypes from 'prop-types';
 import HighlightableView from './highlightable-view';
 
 
-Array.prototype.contains = function(item) {
-    for (let i in this) {
-        if (this[i] === item) return true;
-    }
-    return false;
-};
-
-Array.prototype.remove = function(val) {
-    for (let i = 0; i < this.length; i++) {
-        if (this[i] === val) {
-            this.splice(i, 1);
-            i--;
-        }
-    }
-    return this;
-};
-
-Array.prototype.equals = function(arr) {
-    if (this.length != arr.length) return false;
-    for (let i in this) {
-        if (this[i] != arr[i]) {
-            return false;
-        }
-    }
-    return true;
-};
-
 export default class MultiSelectFlatList extends Component {
     constructor(props) {
         super(props);
@@ -42,6 +15,8 @@ export default class MultiSelectFlatList extends Component {
             selectedIndexes: []
         };
     }
+
+    getFlatListRef = () => this.refs.flatlist;
 
     _onBackButtonPressAndroid = () => {
         this.props.onCancelMultiSelect && this.props.onCancelMultiSelect()
@@ -142,6 +117,7 @@ export default class MultiSelectFlatList extends Component {
     render() {
         return (
             <FlatList
+                ref={'flatlist'}
                 extraData={this.state.selectedIndexes}
                 {...this.props}
                 renderItem={this._renderItem}

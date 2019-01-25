@@ -3,12 +3,11 @@ import {
     View,
     StyleSheet,
     Alert,
-    Dimensions,
     StatusBar,
-    Modal
+    Modal,
+    Text
 } from 'react-native';
 
-import {NavigationActions} from 'react-navigation';
 import {connect} from 'react-redux';
 
 import AppComponent from '../../app-component';
@@ -19,12 +18,12 @@ import IconButton from "../../components/widgets/icon-button";
 import {getFileInfoAsString} from '../../../helpers/app-helper';
 import fs from '../../../native-modules/file-system';
 import CommonUtil from "../../../utils/common-utils";
-import {notifyError} from "../../../helpers/exceptions-helper";
 import ShareModule from "../../../native-modules/share-module";
 import MediaViewer from "../../components/media-viewer";
 import TitleBar from "../../components/titlebar";
 import {WhatsAppActions} from "../../../redux/actions/whatsapp-actions";
 import WhatsAppHelper from "../../../helpers/whatsapp-helper";
+import NoStatusWidget from "../../components/no-status-widget";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -56,7 +55,7 @@ class WhatsAppStatusScreen extends AppComponent {
             Alert.alert(this.t('screens.whatsApp.titles.noStatus'), this.t('screens.whatsApp.messages.noStatus', {type}));
             return;
         }
-        this.props.changeWhatsAppType(path)
+        this.props.changeWhatsAppType(path);
         this.refs.gallery.fetchData();
     };
 
@@ -223,6 +222,12 @@ class WhatsAppStatusScreen extends AppComponent {
         )
     };
 
+    renderNoMediaComponent = () => {
+        return (
+            <NoStatusWidget/>
+        )
+    };
+
     componentProps = {
         highlightableView: {
             highlightColor: this.theme.screens.whatsapp.itemHighlightColor
@@ -268,6 +273,7 @@ class WhatsAppStatusScreen extends AppComponent {
                     refreshColor={[this.theme.screens.whatsapp.refreshColor]}
                     contextualActionBarProps={this.componentProps.actionBar}
                     highlightableViewProps={this.componentProps.highlightableView}
+                    NoMediaComponent={this.renderNoMediaComponent()}
                 />
             </View>
         );

@@ -1,0 +1,2 @@
+cp ./RNAdMobRewardedVideoAdModule.java ../node_modules/react-native-admob/android/src/main/java/com/sbugert/rnadmob/RNAdMobRewardedVideoAdModule.java
+cp ./react-native-ad-mob-build.gradle ../node_modules/react-native-admob/android/build.gradle

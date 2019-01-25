@@ -1,22 +1,25 @@
-import { PermissionsAndroid } from 'react-native';
-import { t } from '../i18n/i18n';
+import {PermissionsAndroid} from 'react-native';
 
-export async function requestStoragePermission() {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-    )
-    return granted === PermissionsAndroid.RESULTS.GRANTED;
-  } catch (err) {
-    notifyError(err)
-    return false;
-  }
-}
+const requestStoragePermission = async () => {
+    try {
+        return await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+    } catch (err) {
+        notifyError(err);
+    }
+};
 
-export const checkStoragePermission = () => {
-  return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
-}
+const isStoragePermissionGranted = () => {
+    return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+};
 
-export const isStoragePermissionGranted = () => {
-  return await checkStoragePermission() == PermissionsAndroid.RESULTS.GRANTED;
-}
+const Storage = {
+    requestStoragePermission,
+    isStoragePermissionGranted
+};
+
+
+const PermissionHelper = {
+    Storage
+};
+
+export default PermissionHelper;

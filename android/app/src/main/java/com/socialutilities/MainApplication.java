@@ -3,10 +3,12 @@ package com.socialutilities;
 import android.app.Application;
 
 import com.socialutilities.modules.fs.FileSystemPackage;
+import com.socialutilities.modules.settings.SettingsModule;
+import com.socialutilities.modules.settings.SettingsPackage;
 import com.socialutilities.modules.share.SharePackage;
 
 import com.facebook.react.ReactApplication;
-import com.dylanvann.fastimage.FastImageViewPackage;
+import com.sbugert.rnadmob.RNAdMobPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -24,42 +26,43 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new RNDeviceInfo(),
+                    new RNAdMobPackage(),
+                    new RNGestureHandlerPackage(),
+                    new RNI18nPackage(),
+                    new VectorIconsPackage(),
+                    new ReactVideoPackage(),
+                    new SharePackage(),
+                    new ViewUtilPackage(),
+                    new FileSystemPackage(),
+                    new SettingsPackage()
+            );
+        }
+
+        @Override
+        protected String getJSMainModuleName() {
+            return "index";
+        }
+    };
+
     @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
     @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new FastImageViewPackage(),
-            new RNDeviceInfo(),
-            new RNAdMobPackage(),
-            new RNGestureHandlerPackage(),
-            new RNI18nPackage(),
-            new VectorIconsPackage(),
-            new ReactVideoPackage(),
-            new SharePackage(),
-            new ViewUtilPackage(),
-            new FileSystemPackage());
+    public void onCreate() {
+        super.onCreate();
+        SoLoader.init(this, /* native exopackage */ false);
     }
-
-    @Override
-    protected String getJSMainModuleName() {
-      return "index";
-    }
-  };
-
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
-  }
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
-  }
 }

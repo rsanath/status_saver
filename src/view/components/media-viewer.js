@@ -4,10 +4,10 @@ import {
     Dimensions,
     StyleSheet,
     TouchableWithoutFeedback,
-    FlatList
+    FlatList,
+    Image
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Image from 'react-native-fast-image';
 import VideoPlayer from '../components/video-player';
 
 import CommonUtils from '../../utils/common-utils';

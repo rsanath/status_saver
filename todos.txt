@@ -1,10 +1,10 @@
 == todos ==
 
+* write a native method to cp a array of files
 
 == bug fix ==
 
-1. Handle orientation change in media viewer screen.
-
+* Handle orientation change in media viewer screen.
 
 == features ==
 

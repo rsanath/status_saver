@@ -5,7 +5,7 @@ import AppNavigator from '../../navigators/root-navigator';
 import TitleBar from '../../components/titlebar';
 import SwitchView from '../../components/switch-view';
 import HowToUseScreen from './howtouse-screen';
-import PermissionRequiredMsg from '../../components/permission-required-component';
+import PermissionRequiredMsg from '../../components/permission-request-component';
 import IconButton from '../../components/widgets/icon-button';
 import AppComponent from '../../app-component';
 
