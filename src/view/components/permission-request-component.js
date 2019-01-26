@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {View, Text, Image, TouchableOpacity, PermissionsAndroid, AppState} from 'react-native';
 
 import {t} from '../../i18n/i18n';
 import theme from '../theme/theme';
@@ -10,20 +10,33 @@ export default class PermissionRequestComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            permissionStatus: null
+            permissionStatus: null,
+            settingsOpened: false
         }
     }
 
-    onRequestPermission = async () => {
+    componentDidMount() {
+        // if the user opens settings and grants the permission when coming back to the app
+        // invoke the callback
+        AppState.addEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange = async (nextState) => {
+        const granted = await PermissionHelper.Storage.isStoragePermissionGranted();
+        this.props.onPermissionResult && this.props.onPermissionResult(granted);
+    }
+
+    requestPermission = async (a) => {
+        const result = await PermissionHelper.Storage.requestStoragePermission();
+        this.setState({permissionStatus: result});
+        this.props.onPermissionResult && this.props.onPermissionResult(result == PermissionsAndroid.RESULTS.GRANTED);
+    }
+
+    onPressRequestButton = () => {
         if (this.state.permissionStatus == PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
             SettingsModule.openAppSettings();
         } else {
-            const result = await PermissionHelper.Storage.requestStoragePermission();
-            this.setState({permissionStatus: result});
-            this.props.onPermissionResult && this.props.onPermissionResult({
-                granted: result == PermissionsAndroid.RESULTS.GRANTED,
-                result: result
-            });
+            this.requestPermission()
         }
     };
 
@@ -44,7 +57,7 @@ export default class PermissionRequestComponent extends Component {
                     source={require('../../assets/images/castle.png')}/>
                 <Text style={styles.info}>{t('permissionsDescription')}</Text>
 
-                <TouchableOpacity onPress={this.onRequestPermission}>
+                <TouchableOpacity onPress={this.onPressRequestButton}>
                     <Text style={styles.button}>{this.getButtonText()}</Text>
                 </TouchableOpacity>
 
