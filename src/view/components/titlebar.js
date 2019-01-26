@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import IconButton from './widgets/icon-button';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import SwitchView from './switch-view';
 import theme from '../theme/theme';
@@ -12,7 +12,7 @@ import theme from '../theme/theme';
 export default class TitleBar extends Component {
     constructor(props) {
         super(props);
-        this.iconSize = 26
+        this.iconSize = 30;
         this.state = {
             multiSelectMode: false
         }
@@ -27,7 +27,7 @@ export default class TitleBar extends Component {
                     onSelect={item.onSelect} >
                     <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                         <SwitchView visible={item.icon} >
-                            <Icon size={25} name={item.icon} color={'black'} />
+                            <Icon size={20} name={item.icon} color={'black'} />
                         </SwitchView>
                         <Text style={{ ...styles.menu, color: item.disabled ? 'grey' : 'black' }}>
                             {item.name}
@@ -72,11 +72,11 @@ export default class TitleBar extends Component {
                     {this.getActions()}
 
                     <SwitchView visible={this.props.menu.length > 0} >
-                        <Menu>
+                        <Menu style={{paddingRight: 10}} >
                             <MenuTrigger>
                                 <Icon
                                     size={this.iconSize}
-                                    name={'dots-vertical'}
+                                    name={'more-vert'}
                                     color={this.props.foregroundColor} />
                             </MenuTrigger>
                             <MenuOptions>

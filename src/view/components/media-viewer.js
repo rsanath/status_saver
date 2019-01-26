@@ -137,6 +137,8 @@ export default class MediaViewer extends React.Component {
     };
 
     toggleHeaderFooter = () => {
+        if (this.state.currentVideo) return;
+
         this.setState(state => {
             return {
                 showHeaderFooter: !state.showHeaderFooter
@@ -154,7 +156,7 @@ export default class MediaViewer extends React.Component {
     onPageSelected = index => {
         this.stopPlayingVideo(); // if any
 
-        this.setState({currentPosition: index, showHeaderFooter: true, index});
+        this.setState({currentPosition: index, index});
         this.props.onPageChange && this.props.onPageChange(index)
     };
 
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
     },
     video: {
         width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT - NAVBAR_HEIGHT,
+        height: SCREEN_HEIGHT - NAVBAR_HEIGHT + 10,
         backgroundColor: 'black'
     },
     header: {

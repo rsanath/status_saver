@@ -31,7 +31,6 @@ const styles = {
         alignSelf: 'center',
     },
     info: {
-        fontFamily: 'monospace',
         fontSize: 18,
         textAlign: 'center'
     }

@@ -119,8 +119,8 @@ class WhatsAppStatusScreen extends AppComponent {
 
     getMultiSelectActions = () => {
         return [
-            {iconName: 'content-save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)},
-            {iconName: 'share-variant', onPress: () => this.onShareMultiple(this.state.multiSelectItems)},
+            {iconName: 'save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)},
+            {iconName: 'share', onPress: () => this.onShareMultiple(this.state.multiSelectItems)},
         ]
     };
 
@@ -144,8 +144,9 @@ class WhatsAppStatusScreen extends AppComponent {
         return (
             <View style={{flex: 1, flexDirection: 'row', backgroundColor: colors.mediaViewerHeaderFooterColor}}>
                 <IconButton
-                    name={'chevron-down'}
-                    size={50}
+                    style={{marginTop: 10, marginLeft: 10}}
+                    name={'keyboard-arrow-down'}
+                    size={40}
                     color={colors.mediaViewerFgColor}
                     onPress={onPress}
                 />
@@ -155,31 +156,32 @@ class WhatsAppStatusScreen extends AppComponent {
 
     renderFooter = path => {
         const colors = this.theme.screens.whatsapp;
+        const iconSize = 30;
 
         return (
             <View style={[styles.header, {backgroundColor: colors.mediaViewerHeaderFooterColor}]}>
                 <IconButton
-                    name={'information'}
+                    name={'info'}
                     color={colors.mediaViewerFgColor}
-                    size={30}
+                    size={iconSize}
                     style={styles.icon}
                     onPress={() => this.onPressInfo(path)}/>
                 <IconButton
                     name={'delete'}
                     color={colors.mediaViewerFgColor}
-                    size={30}
+                    size={iconSize}
                     style={styles.icon}
                     onPress={() => this.onPressDelete(path)}/>
                 <IconButton
-                    name={'content-save'}
+                    name={'save'}
                     color={colors.mediaViewerFgColor}
-                    size={30}
+                    size={iconSize}
                     style={styles.icon}
                     onPress={() => this.onPressSave(path)}/>
                 <IconButton
-                    name={'share-variant'}
+                    name={'share'}
                     color={colors.mediaViewerFgColor}
-                    size={30}
+                    size={iconSize}
                     style={styles.icon}
                     onPress={() => this.onPressShare(path)}/>
             </View>

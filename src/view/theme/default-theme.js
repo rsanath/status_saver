@@ -16,8 +16,8 @@ export default {
         },
         whatsapp: {
             backgroundColor: '#fff',
-            statusBarColor: '#161616',
-            statusBarSelectionModeColor: '#eeeeee',
+            statusBarColor: '#000000',
+            statusBarSelectionModeColor: '#ffffff',
             refreshColor: colors.componentColor,
             itemHighlightColor: 'rgba(0,0,0,0.7)',
             titleBarBgColor: colors.componentColor,

@@ -99,7 +99,7 @@ ContextualToolbar.propTypes = {
 };
 
 ContextualToolbar.defaultProps = {
-    iconSize: 30,
+    iconSize: 25,
     foregroundColor: 'black',
     backgroundColor: 'white',
     actions: []

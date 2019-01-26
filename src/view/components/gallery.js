@@ -16,7 +16,7 @@ import ContextualActionBar from './contextual-toolbar';
 import SwitchView from './switch-view';
 import {listContent} from '../../helpers/file-system-helper';
 import CommonUtil from "../../utils/common-utils";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 
 export default class Gallery extends AppComponent {
@@ -45,7 +45,7 @@ export default class Gallery extends AppComponent {
                     <Image
                         source={{uri: item}}
                         style={[thumbnailStyle, styles.thumbnail]}/>
-                    <Icon style={styles.videoIndicatorIcon} color={'#fff'} size={30} name={'video'}/>
+                    <Icon style={styles.videoIndicatorIcon} color={'#fff'} size={30} name={'videocam'}/>
                 </View>
             ) : (
                 <Image
@@ -209,7 +209,8 @@ const styles = StyleSheet.create({
     videoIndicatorIcon: {
         position: 'absolute',
         bottom: 10,
-        right: 10
+        right: 10,
+        elevation: 10
     },
     thumbnail: {
         margin: 2,
