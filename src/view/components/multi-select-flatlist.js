@@ -16,8 +16,6 @@ export default class MultiSelectFlatList extends Component {
         };
     }
 
-    getFlatListRef = () => this.refs.flatlist;
-
     _onBackButtonPressAndroid = () => {
         this.props.onCancelMultiSelect && this.props.onCancelMultiSelect()
         if (this.state.multiSelectMode) {

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "./widgets/icon";
+
 
 export default class HighlightableView extends Component {
 
@@ -42,7 +43,7 @@ HighlightableView.propTypes = {
 };
 
 HighlightableView.defaultProps = {
-    highlightIcon: 'check',
+    highlightIcon: 'tick',
     foregroundColor: 'white',
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
 };

@@ -46,11 +46,29 @@ const saveStatus = async (path) => {
         })
 };
 
+const getInitialStatusDir = async () => {
+    let statusDirs = [
+        Constants.WHATSAPP_STATUS_PATH,
+        Constants.GBWHATSAPP_STATUS_PATH,
+        Constants.WHATSAPP_BUSINESS_STATUS_PATH
+    ];
+
+    for (let i in statusDirs) {
+        let dir = statusDirs[i];
+        if (await fs.exists(dir)) {
+            return dir;
+        }
+    }
+
+    return null;
+};
+
 const WhatsAppHelper = {
     WhatsAppTypes,
     getPathForWhatsAppType,
     saveMultipleStatus,
-    saveStatus
+    saveStatus,
+    getInitialStatusDir
 };
 
 export default WhatsAppHelper;

@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import IconButton from './widgets/icon-button';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import SwitchView from './switch-view';
 import theme from '../theme/theme';
-
-
+import Icon from "./widgets/icon";
 
 export default class TitleBar extends Component {
     constructor(props) {
@@ -72,11 +70,11 @@ export default class TitleBar extends Component {
                     {this.getActions()}
 
                     <SwitchView visible={this.props.menu.length > 0} >
-                        <Menu style={{paddingRight: 10}} >
+                        <Menu style={{paddingRight: 6}} >
                             <MenuTrigger>
                                 <Icon
                                     size={this.iconSize}
-                                    name={'more-vert'}
+                                    name={'dots-vertical'}
                                     color={this.props.foregroundColor} />
                             </MenuTrigger>
                             <MenuOptions>

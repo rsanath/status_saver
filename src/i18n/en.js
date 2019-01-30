@@ -24,6 +24,7 @@ export default {
 
     messages: {
         deleteStatus: 'Are you sure you want to delete the status? This is a non reversible process.',
+        deleteMultipleStatus: 'Are you sure you want to delete the selected statuses? This is a non reversible process.',
         saveSuccess: 'Saved',
         saveFailure: 'Unable to save'
     },

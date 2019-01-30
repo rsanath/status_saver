@@ -5,6 +5,7 @@ import {t} from '../../i18n/i18n';
 import theme from '../theme/theme';
 import PermissionHelper from "../../helpers/permissions-helper";
 import SettingsModule from "../../native-modules/settings-module";
+import Card from "./card";
 
 export default class PermissionRequestComponent extends Component {
     constructor(props) {
@@ -49,19 +50,15 @@ export default class PermissionRequestComponent extends Component {
 
     render() {
         return (
-            <View
-                style={[styles.container, this.props.style]}
-                {...this.props}>
-                <Image
-                    style={{width: 200, height: 200}}
-                    source={require('../../assets/images/castle.png')}/>
-                <Text style={styles.info}>{t('permissionsDescription')}</Text>
-
-                <TouchableOpacity onPress={this.onPressRequestButton}>
-                    <Text style={styles.button}>{this.getButtonText()}</Text>
-                </TouchableOpacity>
-
-            </View>
+            <Card
+                image={require('../../assets/images/castle.png')}
+                content={t('permissionsDescription')}
+                footer={(
+                    <TouchableOpacity onPress={this.onPressRequestButton}>
+                        <Text style={styles.button}>{this.getButtonText()}</Text>
+                    </TouchableOpacity>
+                )}
+            />
         );
     }
 }

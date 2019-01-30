@@ -7,6 +7,7 @@ import Constants from "../../constants";
 import SwitchView from "../components/switch-view";
 import IconButton from "../components/widgets/icon-button";
 import Gallery from '../components/gallery';
+import Icon from "../components/widgets/icon";
 
 export default class TestScreen extends AppComponent {
 
@@ -26,15 +27,7 @@ export default class TestScreen extends AppComponent {
     render() {
         return (
             <View style={styles.container}>
-
-                <Gallery
-                    onEnterMultiSelectMode={() => {
-                    }}
-                    onExitMultiSelectMode={() => {
-                    }}
-                    multiSelectActionsStyle={{foregroundColor: 'white', backgroundColor: this.theme.colors.secondary}}
-                    NoMediaComponent={<Text>ape</Text>}
-                    path={Constants.WHATSAPP_STATUS_PATH}/>
+                <Icon name={'save'} size={30} family={Icon.MATERIAL}/>
             </View>
         );
     }

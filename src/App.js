@@ -8,8 +8,10 @@ import AppNavigator from './view/navigators/root-navigator';
 import store from './redux/store';
 import PermissionHelper from "./helpers/permissions-helper";
 import PermissionRequestComponent from "./view/components/permission-request-component";
+import Icon from "./view/components/widgets/icon";
 
 
+Icon.FONT_FAMILY = Icon.MATERIAL;
 export default class App extends Component {
 
     constructor(props) {

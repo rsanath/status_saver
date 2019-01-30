@@ -18,6 +18,7 @@ import {StatusActions} from '../../../redux/actions/status-actions';
 import {t} from '../../../i18n/i18n';
 import {notifyError} from '../../../helpers/exceptions-helper';
 import {isStoragePermissionGranted} from '../../../helpers/permissions-helper';
+import Icon from "../../components/widgets/icon";
 
 
 let _titleBar;

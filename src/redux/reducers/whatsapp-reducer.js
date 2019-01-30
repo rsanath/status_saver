@@ -1,9 +1,9 @@
-import Constants from '../../constants';
 import { WhatsAppConstants } from '../actions/whatsapp-actions';
 
 const initialState = {
     data: [],
-    statusSource: Constants.WHATSAPP_STATUS_PATH,
+    statusSource: null,
+    noWhatsAppAvailable: false
 };
 
 
@@ -18,6 +18,11 @@ export default function WhatsAppReducer(state = initialState, action) {
             return {
                 ...state,
                 data: action.payload
+            };
+        case WhatsAppConstants.ON_NO_WHATSAPP_AVAILABLE:
+            return {
+                ...state,
+                noWhatsAppAvailable: true
             };
         default:
             return state

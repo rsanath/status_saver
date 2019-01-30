@@ -13,3 +13,5 @@
 == completed ==
 
 refresh data immediately inside the media viewer screen where the source data has changed in the whatsapp-media-screen.
+
+* provide delete option in multi select mode

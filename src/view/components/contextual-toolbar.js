@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 import IconButton from './widgets/icon-button';
+import Icon from "./widgets/icon";
 
 
 export default class ContextualToolbar extends Component {
@@ -33,7 +34,7 @@ export default class ContextualToolbar extends Component {
                 <IconButton
                     onPress={this.props.onRequestCancel}
                     style={styles.icon}
-                    name={'close'}
+                    name={'x'}
                     color={foregroundColor}
                     size={iconSize} />
 

@@ -4,8 +4,7 @@ import {
     StyleSheet,
     Alert,
     StatusBar,
-    Modal,
-    Text
+    Modal, Text
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -21,9 +20,10 @@ import CommonUtil from "../../../utils/common-utils";
 import ShareModule from "../../../native-modules/share-module";
 import MediaViewer from "../../components/media-viewer";
 import TitleBar from "../../components/titlebar";
-import {WhatsAppActions} from "../../../redux/actions/whatsapp-actions";
+import {WhatsAppActions, getInitialStatusSource} from "../../../redux/actions/whatsapp-actions";
 import WhatsAppHelper from "../../../helpers/whatsapp-helper";
-import NoStatusWidget from "../../components/no-status-widget";
+import SwitchView from "../../components/switch-view";
+import Card from "../../components/card";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -35,7 +35,11 @@ class WhatsAppStatusScreen extends AppComponent {
             selectedIndex: 0,
             multiSelectMode: false,
             mediaViewerVisible: false
-        }
+        };
+    }
+
+    componentDidMount() {
+        this.props.getInitialStatusSource();
     }
 
     onMultiSelectItemsChange = (selection) => {
@@ -56,7 +60,28 @@ class WhatsAppStatusScreen extends AppComponent {
             return;
         }
         this.props.changeWhatsAppType(path);
-        this.refs.gallery.fetchData();
+    };
+
+    onDeleteMultiple = async (items) => {
+        const deleteFiles = () => {
+            const del = items.map(item => fs.rm(item));
+            Promise.all(del)
+                .then(() => {
+                    this.toast('Deleted');
+                    this.refs.gallery.fetchData();
+                })
+                .catch(e => this.toast(e))
+        };
+
+        Alert.alert(
+            this.t('titles.deleteStatus'),
+            this.t('messages.deleteMultipleStatus'),
+            [
+                {text: this.t('labels.cancel'), onPress: null, style: 'cancel'},
+                {text: this.t('labels.delete'), onPress: deleteFiles},
+            ],
+            {cancelable: true}
+        )
     };
 
     onSaveMultiple = async (items) => {
@@ -119,6 +144,7 @@ class WhatsAppStatusScreen extends AppComponent {
 
     getMultiSelectActions = () => {
         return [
+            {iconName: 'trash', onPress: () => this.onDeleteMultiple(this.state.multiSelectItems)},
             {iconName: 'save', onPress: () => this.onSaveMultiple(this.state.multiSelectItems)},
             {iconName: 'share', onPress: () => this.onShareMultiple(this.state.multiSelectItems)},
         ]
@@ -145,7 +171,7 @@ class WhatsAppStatusScreen extends AppComponent {
             <View style={{flex: 1, flexDirection: 'row', backgroundColor: colors.mediaViewerHeaderFooterColor}}>
                 <IconButton
                     style={{marginTop: 10, marginLeft: 10}}
-                    name={'keyboard-arrow-down'}
+                    name={'chevron-down'}
                     size={40}
                     color={colors.mediaViewerFgColor}
                     onPress={onPress}
@@ -167,7 +193,7 @@ class WhatsAppStatusScreen extends AppComponent {
                     style={styles.icon}
                     onPress={() => this.onPressInfo(path)}/>
                 <IconButton
-                    name={'delete'}
+                    name={'trash'}
                     color={colors.mediaViewerFgColor}
                     size={iconSize}
                     style={styles.icon}
@@ -226,7 +252,15 @@ class WhatsAppStatusScreen extends AppComponent {
 
     renderNoMediaComponent = () => {
         return (
-            <NoStatusWidget/>
+            <Card
+                image={require('../../../assets/images/beach.png')}
+                content={(
+                    <Text>
+                        <Text>Nothing here.</Text>
+                        <Text>View any status and come check back.</Text>
+                    </Text>
+                )}
+            />
         )
     };
 
@@ -236,12 +270,22 @@ class WhatsAppStatusScreen extends AppComponent {
         },
         actionBar: {
             foregroundColor: 'black',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            iconSize: 30
         },
         titleBar: {
             backgroundColor: this.theme.screens.whatsapp.titleBarBgColor,
             foregroundColor: this.theme.screens.whatsapp.titleBarFgColor
         }
+    };
+
+    renderNoWhatsAppAvailableComponent = () => {
+        return (
+            <Card
+                content={'No whatsapp available'}
+                image={require('../../../assets/images/hammock.png')}
+            />
+        )
     };
 
     render() {
@@ -258,25 +302,30 @@ class WhatsAppStatusScreen extends AppComponent {
                 <StatusBar
                     barStyle={statusBarStyle}
                     backgroundColor={statusBarColor}/>
-                {this.renderTitleBar()}
-                {this.renderMediaViewer()}
-                <Gallery
-                    ref={'gallery'}
-                    containerStyle={{backgroundColor: this.theme.screens.global.backgroundColor}}
-                    path={this.props.statusSource}
-                    dataRefreshRate={Constants.MEDIA_REFRESH_RATE}
-                    onPressItem={this.onPressItem}
-                    onEnterMultiSelectMode={() => this.setState({multiSelectMode: true})}
-                    onExitMultiSelectMode={this.clearMultiSelectItems}
-                    onRequestCancelMultiSelect={this.clearMultiSelectItems}
-                    onMultiSelectSelectionChange={this.onMultiSelectItemsChange}
-                    onDataChange={data => this.setState({data})}
-                    multiSelectActions={this.getMultiSelectActions()}
-                    refreshColor={[this.theme.screens.whatsapp.refreshColor]}
-                    contextualActionBarProps={this.componentProps.actionBar}
-                    highlightableViewProps={this.componentProps.highlightableView}
-                    NoMediaComponent={this.renderNoMediaComponent()}
-                />
+                <SwitchView visible={this.state.noWhatsAppAvailable}>
+                    {this.renderNoWhatsAppAvailableComponent}
+                </SwitchView>
+                <SwitchView visible={!this.state.noWhatsAppAvailable}>
+                    {this.renderTitleBar()}
+                    {this.renderMediaViewer()}
+                    <Gallery
+                        ref={'gallery'}
+                        containerStyle={{backgroundColor: this.theme.screens.global.backgroundColor}}
+                        path={this.props.statusSource}
+                        dataRefreshRate={Constants.MEDIA_REFRESH_RATE}
+                        onPressItem={this.onPressItem}
+                        onEnterMultiSelectMode={() => this.setState({multiSelectMode: true})}
+                        onExitMultiSelectMode={this.clearMultiSelectItems}
+                        onRequestCancelMultiSelect={this.clearMultiSelectItems}
+                        onMultiSelectSelectionChange={this.onMultiSelectItemsChange}
+                        onDataChange={data => this.setState({data})}
+                        multiSelectActions={this.getMultiSelectActions()}
+                        refreshColor={[this.theme.screens.whatsapp.refreshColor]}
+                        contextualActionBarProps={this.componentProps.actionBar}
+                        highlightableViewProps={this.componentProps.highlightableView}
+                        NoMediaComponent={this.renderNoMediaComponent()}
+                    />
+                </SwitchView>
             </View>
         );
     }
@@ -303,6 +352,7 @@ const mapStateToProps = ({whatsapp}) => ({...whatsapp});
 
 const mapDispatchToProps = dispatch => {
     return {
+        getInitialStatusSource: () => getInitialStatusSource(dispatch),
         changeWhatsAppType: (source) => dispatch(WhatsAppActions.changeWhatsAppType(source))
     }
 };

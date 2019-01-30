@@ -85,7 +85,7 @@ export function rm(path) {
     })
 }
 
-export default {
+const FileSystem = {
     lstat,
     exists,
     mkdir,
@@ -93,4 +93,6 @@ export default {
     ls,
     cp,
     rm
-}
+};
+
+export default FileSystem;

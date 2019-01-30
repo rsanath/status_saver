@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "./widgets/icon";
 import Video from 'react-native-video';
 
 import FadeView from "./fade-view"; // eslint-disable-line
@@ -381,7 +381,7 @@ export default class VideoPlayer extends Component {
                 style={[styles.playButton, customStyles.playButton]}
                 onPress={this.onStartPress}
             >
-                <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={35}/>
+                <Icon style={[styles.playArrow, customStyles.playArrow]} name="play" size={35}/>
             </TouchableOpacity>
         );
     }

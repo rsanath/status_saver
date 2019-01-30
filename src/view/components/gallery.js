@@ -16,7 +16,7 @@ import ContextualActionBar from './contextual-toolbar';
 import SwitchView from './switch-view';
 import {listContent} from '../../helpers/file-system-helper';
 import CommonUtil from "../../utils/common-utils";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "./widgets/icon";
 
 
 export default class Gallery extends AppComponent {
@@ -45,7 +45,7 @@ export default class Gallery extends AppComponent {
                     <Image
                         source={{uri: item}}
                         style={[thumbnailStyle, styles.thumbnail]}/>
-                    <Icon style={styles.videoIndicatorIcon} color={'#fff'} size={30} name={'videocam'}/>
+                    <Image style={styles.videoIndicatorIcon} source={require('../../assets/images/videocam.png')}/>
                 </View>
             ) : (
                 <Image
@@ -72,16 +72,23 @@ export default class Gallery extends AppComponent {
         this.setState({fetchingData: false})
     };
 
-    fetchData = async () => {
+    fetchData = () => {
+        console.log('fetching data at ', this.props.path);
         if (this.state.fetchingData) return;
 
-        let data = await listContent(this.props.path);
-        data = this.props.filterData(data);
+        listContent(this.props.path)
+            .then(data => {
+                data = this.props.filterData(data);
 
-        if (!this.state.data.equals(data)) {
-            this.setState({data, firstTimeDataFetched: true});
-            this.props.onDataChange && this.props.onDataChange(data)
-        }
+                if (!this.state.data.equals(data)) {
+                    this.setState({data, firstTimeDataFetched: true});
+                    this.props.onDataChange && this.props.onDataChange(data)
+                }
+            })
+            .catch(e => {
+                console.log(e)
+                this.setState({data: []});
+            })
     };
 
     onEnterMultiSelectMode = () => {
@@ -139,6 +146,13 @@ export default class Gallery extends AppComponent {
     componentWillUnmount() {
         clearInterval(this.state.autoRefresh)
     }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.path != prevProps.path) {
+            this.fetchData();
+        }
+    }
+
 
     renderRefreshControl = () => {
         return (
@@ -207,6 +221,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     videoIndicatorIcon: {
+        height: 30,
+        width: 30,
         position: 'absolute',
         bottom: 10,
         right: 10,
