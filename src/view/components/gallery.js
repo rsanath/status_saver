@@ -60,6 +60,7 @@ export default class Gallery extends AppComponent {
     };
 
     _refreshData = async () => {
+        if (!this.props.path) return;
         this.setState({fetchingData: true});
 
         let data = await listContent(this.props.path);
@@ -73,8 +74,8 @@ export default class Gallery extends AppComponent {
     };
 
     fetchData = () => {
-        console.log('fetching data at ', this.props.path);
         if (this.state.fetchingData) return;
+        if (!this.props.path) return;
 
         listContent(this.props.path)
             .then(data => {
@@ -86,7 +87,6 @@ export default class Gallery extends AppComponent {
                 }
             })
             .catch(e => {
-                console.log(e)
                 this.setState({data: []});
             })
     };
@@ -264,7 +264,7 @@ Gallery.propTypes = {
     onRequestCancelMultiSelect: PropTypes.func.isRequired,
     onMultiSelectSelectionChange: PropTypes.func.isRequired,
     dataRefreshRate: PropTypes.number,
-    NoMediaComponent: PropTypes.instanceOf(React.Component),
+    NoMediaComponent: PropTypes.any,
     multiselectActionBarStyle: PropTypes.object,
     multiSelectActions: PropTypes.arrayOf(PropTypes.shape({
         iconName: PropTypes.string.isRequired,

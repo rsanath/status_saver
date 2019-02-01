@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 import IconButton from './widgets/icon-button';
-import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
+import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import SwitchView from './switch-view';
 import theme from '../theme/theme';
 import Icon from "./widgets/icon";
@@ -16,18 +16,27 @@ export default class TitleBar extends Component {
         }
     }
 
+    renderBackButton() {
+        if (!this.props.onBackPress) return null;
+        return (
+            <TouchableOpacity onPress={this.props.onBackPress}>
+                <Icon style={styles.backButton} color={this.props.foregroundColor} size={this.iconSize} name={'back'}/>
+            </TouchableOpacity>
+        )
+    }
+
     getMenuList = () => {
         return this.props.menu.map(item => {
             return (
                 <MenuOption
                     key={JSON.stringify(item)}
                     disabled={item.disabled}
-                    onSelect={item.onSelect} >
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                        <SwitchView visible={item.icon} >
-                            <Icon size={20} name={item.icon} color={'black'} />
+                    onSelect={item.onSelect}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <SwitchView visible={item.icon}>
+                            <Icon size={20} name={item.icon} color={'black'}/>
                         </SwitchView>
-                        <Text style={{ ...styles.menu, color: item.disabled ? 'grey' : 'black' }}>
+                        <Text style={{...styles.menu, color: item.disabled ? 'grey' : 'black'}}>
                             {item.name}
                         </Text>
                     </View>
@@ -37,19 +46,19 @@ export default class TitleBar extends Component {
     }
 
     toggleMultiSelectMode = val => {
-        this.setState({ multiSelectMode: val })
+        this.setState({multiSelectMode: val})
     }
 
     getActions = () => {
         return this.props.actions.map(item => {
             return (
                 <IconButton
-                    style={{ marginRight: 10 }}
+                    style={{marginRight: 10}}
                     key={JSON.stringify(item)}
                     size={this.iconSize}
                     color={this.props.foregroundColor}
                     onPress={item.onPress}
-                    name={item.icon} />
+                    name={item.icon}/>
             )
         })
     }
@@ -60,22 +69,31 @@ export default class TitleBar extends Component {
                 style={[
                     styles.container,
                     this.props.containerStyle,
-                    { backgroundColor: this.state.multiSelectMode ? theme.colors.secondary : this.props.backgroundColor }
+                    {backgroundColor: this.state.multiSelectMode ? theme.colors.secondary : this.props.backgroundColor}
                 ]}>
-                <Text style={[styles.title, { color: this.props.foregroundColor }]} >{this.props.title}</Text>
 
-                <View style={{ flex: 1 }} />
+                {this.renderBackButton()}
 
-                <SwitchView visible={!this.state.multiSelectMode} >
+                <Text style={[styles.title, {color: this.props.foregroundColor}]}>{this.props.title}</Text>
+
+                <View style={{flex: 1}}/>
+
+                <SwitchView visible={this.props.rightActions}>
+                    <View style={styles.rightContent}>
+                        {this.props.rightActions}
+                    </View>
+                </SwitchView>
+
+                <SwitchView visible={!this.state.multiSelectMode}>
                     {this.getActions()}
 
-                    <SwitchView visible={this.props.menu.length > 0} >
-                        <Menu style={{paddingRight: 6}} >
+                    <SwitchView visible={this.props.menu.length > 0}>
+                        <Menu style={{paddingRight: 6}}>
                             <MenuTrigger>
                                 <Icon
                                     size={this.iconSize}
                                     name={'dots-vertical'}
-                                    color={this.props.foregroundColor} />
+                                    color={this.props.foregroundColor}/>
                             </MenuTrigger>
                             <MenuOptions>
                                 {this.getMenuList()}
@@ -83,7 +101,7 @@ export default class TitleBar extends Component {
                         </Menu>
                     </SwitchView>
                 </SwitchView>
-            </View >
+            </View>
         );
     }
 }
@@ -107,8 +125,14 @@ const styles = {
     menu: {
         fontSize: 16,
         padding: 3
+    },
+    backButton: {
+        padding: 4,
+    },
+    rightContent: {
+        flexDirection: 'row'
     }
-}
+};
 
 TitleBar.propTypes = {
     backgroundColor: PropTypes.string,
@@ -125,7 +149,9 @@ TitleBar.propTypes = {
         icon: PropTypes.string.isRequired,
         onPress: PropTypes.func.isRequired
     })),
-    selectionMode: PropTypes.bool
+    selectionMode: PropTypes.bool,
+    onBackPress: PropTypes.func,
+    rightActions: PropTypes.any
 }
 
 TitleBar.defaultProps = {

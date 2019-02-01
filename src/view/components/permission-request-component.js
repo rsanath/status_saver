@@ -5,7 +5,8 @@ import {t} from '../../i18n/i18n';
 import theme from '../theme/theme';
 import PermissionHelper from "../../helpers/permissions-helper";
 import SettingsModule from "../../native-modules/settings-module";
-import Card from "./card";
+import Card from "./widgets/card";
+import OutlineButton from "./widgets/outline-button";
 
 export default class PermissionRequestComponent extends Component {
     constructor(props) {
@@ -54,9 +55,11 @@ export default class PermissionRequestComponent extends Component {
                 image={require('../../assets/images/castle.png')}
                 content={t('permissionsDescription')}
                 footer={(
-                    <TouchableOpacity onPress={this.onPressRequestButton}>
-                        <Text style={styles.button}>{this.getButtonText()}</Text>
-                    </TouchableOpacity>
+                    <OutlineButton
+                        title={this.getButtonText()}
+                        color={theme.colors.primary}
+                        onPress={this.onPressRequestButton}
+                    />
                 )}
             />
         );

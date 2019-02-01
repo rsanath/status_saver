@@ -6,10 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 export default class Icon extends React.Component {
 
     static FONT_FAMILY = 'material';
-
     static MATERIAL = 'material';
-    static TEST = 'test';
-
     static DEFAULT_ICON = 'unknown';
 
     static IconNameMap = {
@@ -27,6 +24,7 @@ export default class Icon extends React.Component {
             trash: 'delete',
             share: 'share',
             videocam: 'videocam',
+            back: 'arrow-back',
             unknown: 'error-outline'
         }
     };
@@ -34,8 +32,6 @@ export default class Icon extends React.Component {
     getIconFamily = () => {
         switch (Icon.FONT_FAMILY) {
             case Icon.MATERIAL:
-                return MaterialIcon;
-            case Icon.TEST:
                 return MaterialIcon;
             default:
                 return MaterialIcon;
@@ -46,7 +42,7 @@ export default class Icon extends React.Component {
     getIconName = () => {
         return Icon.IconNameMap
             [Icon.FONT_FAMILY]
-            [this.props.name || Icon.DEFAULT_ICON];
+            [this.props.name];
     };
 
     render() {
@@ -62,12 +58,13 @@ export default class Icon extends React.Component {
 }
 
 Icon.propTypes = {
-    name: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired,
+    name: PropTypes.string,
+    size: PropTypes.number,
     color: PropTypes.string
 };
 
 Icon.deafultProps = {
     size: 30,
-    color: '#000000'
+    color: '#000000',
+    name: Icon.DEFAULT_ICON
 };

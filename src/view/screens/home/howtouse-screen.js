@@ -34,16 +34,7 @@ export default class HowToUseScreen extends Component {
 }
 
 const styles = {
-  title: {
-    fontWeight: 'bold',
-    margin: 6,
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  steps: {
-    fontSize: 18,
-    marginVertical: 5,
-  },
+  ,
   button: {
     fontWeight: 'bold',
     color: theme.colors.primary,

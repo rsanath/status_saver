@@ -115,7 +115,6 @@ export default class MultiSelectFlatList extends Component {
     render() {
         return (
             <FlatList
-                ref={'flatlist'}
                 extraData={this.state.selectedIndexes}
                 {...this.props}
                 renderItem={this._renderItem}

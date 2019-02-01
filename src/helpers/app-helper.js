@@ -1,10 +1,10 @@
 import {ToastAndroid, Dimensions, Linking} from 'react-native';
 import {checkAndCreateDir} from './file-system-helper';
-import {NativeModules} from 'react-native';
 import {t} from '../i18n/i18n';
-import {get} from '../api/firebase';
 import {notifyError} from './exceptions-helper';
 import fs from '../native-modules/file-system';
+import {NavigationActions} from 'react-navigation';
+import db from "../api/firebase";
 
 
 export const copyFile = async (sourcePath, destDir) => {
@@ -39,7 +39,7 @@ export const sendMail = (to, sub = '', body = '') => {
 }
 
 export const getSupportEmail = async () => {
-    return await get('/support/supportEmail')
+    return await db.read('/support/supportEmail')
 }
 
 export const getFileInfoAsString = async (filepath) => {
@@ -61,4 +61,10 @@ export const getFileInfoAsString = async (filepath) => {
     message += `${t('labels.lastModified')} : ${lastModified}`;
 
     return message;
+}
+
+export function navigateBack(context) {
+    const {navigation} = context.props;
+    if (!navigation) return;
+    navigation.dispatch(NavigationActions.back())
 }

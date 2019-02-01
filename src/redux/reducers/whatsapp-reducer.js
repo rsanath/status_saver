@@ -2,7 +2,7 @@ import { WhatsAppConstants } from '../actions/whatsapp-actions';
 
 const initialState = {
     data: [],
-    statusSource: null,
+    statusSource: '',
     noWhatsAppAvailable: false
 };
 

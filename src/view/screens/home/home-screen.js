@@ -69,7 +69,6 @@ export default class App extends AppComponent {
     }
 
     componentDidCatch(error, info) {
-        console.warn(error)
         notifyError(error, info)
     }
 

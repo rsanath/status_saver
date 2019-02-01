@@ -1,7 +1,6 @@
 import DeviceInfo from 'react-native-device-info';
 
-import { db } from '../api/firebase';
-import C from '../constants';
+import db from '../api/firebase';
 
 export const notifyError = async e => {
     if (!(e instanceof Error)) return;
@@ -36,7 +35,7 @@ export const notifyError = async e => {
         maxMemory: DeviceInfo.getMaxMemory(),
     };
 
-    var key = db().ref().push().key;
+    var key = db.database.ref().push().key;
 
-    db().ref('errors/' + C.APP_NAME + '/' + key).set(errorInfo);
+    db.write('/errors/' + key, errorInfo);
 }

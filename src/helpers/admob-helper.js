@@ -1,11 +1,10 @@
-import { get } from '../api/firebase'
-import config from '../../config';
+import db from '../api/firebase'
 import { notifyError } from './exceptions-helper';
 
 export const getAdConfig = () => {
-    return get(config.routes.appRoute + '/config/ads')
+    return db.read('/config/ads')
         .catch(error => {
-            notifyError(error)
+            notifyError(error);
             return DeafultAdConfig
         })
 }

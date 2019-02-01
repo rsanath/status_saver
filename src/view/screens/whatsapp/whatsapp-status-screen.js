@@ -23,7 +23,8 @@ import TitleBar from "../../components/titlebar";
 import {WhatsAppActions, getInitialStatusSource} from "../../../redux/actions/whatsapp-actions";
 import WhatsAppHelper from "../../../helpers/whatsapp-helper";
 import SwitchView from "../../components/switch-view";
-import Card from "../../components/card";
+import Card from "../../components/widgets/card";
+import db from "../../../api/firebase";
 
 
 class WhatsAppStatusScreen extends AppComponent {
@@ -160,7 +161,15 @@ class WhatsAppStatusScreen extends AppComponent {
         }, {
             name: 'WhatsApp Business Status',
             onSelect: () => this.onChangeStatusSource(WhatsAppHelper.WhatsAppTypes.WHATSAPP_BUSINESS)
-        }];
+        }, {
+            name: 'Help',
+            onSelect: () => this.navigateToHelpScreen()
+        }
+        ];
+    };
+
+    navigateToHelpScreen = () => {
+        this.props.navigation.navigate('Help');
     };
 
     renderHeader = function (path) {
@@ -254,12 +263,7 @@ class WhatsAppStatusScreen extends AppComponent {
         return (
             <Card
                 image={require('../../../assets/images/beach.png')}
-                content={(
-                    <Text>
-                        <Text>Nothing here.</Text>
-                        <Text>View any status and come check back.</Text>
-                    </Text>
-                )}
+                content={'Nothing here come check back later'}
             />
         )
     };

@@ -2,16 +2,26 @@ import config from '../../config';
 import firebase from '@firebase/app';
 import '@firebase/database';
 
+
 firebase.initializeApp(config.firebase);
 
-let _db = null;
+const database = firebase.database();
 
-export const db = () => {
-    if (!_db) (_db = firebase.database())
-    return _db
+const read = async (path) => {
+    const snapshot = await database.ref(path).once('value');
+    return snapshot.val();
 };
 
-export const get = path => {
-    return db().ref(path).once('value')
-        .then(snapshot => snapshot.val())
+const write = (path, val) => {
+    database.ref(path).set(val);
 };
+
+const getKey = () => {
+    return database.ref().push().key
+};
+
+const db = {
+    read, write, getKey, database
+};
+
+export default db;
