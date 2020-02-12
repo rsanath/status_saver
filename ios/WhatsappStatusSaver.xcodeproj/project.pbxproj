@@ -58,7 +58,6 @@
 		8AFA55E6AE4045ECADD208A0 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 495135FDFF29421A9ABFDC58 /* libRNI18n.a */; };
 		6CB5C560E0164AC0A8A08050 /* libRNI18n-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7F03E40CF1D425BA99E2F21 /* libRNI18n-tvOS.a */; };
 		9FD271703E0E42B88F53BEDA /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C23133559744FAB9C0FFD6 /* libRNGestureHandler.a */; };
-		DDFFD0CB8D0B4A098CBAEEF1 /* libRNAdMobManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 237D08C707064B20B770F5B3 /* libRNAdMobManager.a */; };
 		B9D5C6EBDD8746BD97D6116C /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC7C13F7ADCB48F3AAD82591 /* libRNDeviceInfo.a */; };
 		DFE5695646A2492B804B2C27 /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3495E0E9EE8749898CD4A97B /* libRNDeviceInfo-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -391,8 +390,6 @@
 		A7F03E40CF1D425BA99E2F21 /* libRNI18n-tvOS.a */ = {isa = PBXFileReference; name = "libRNI18n-tvOS.a"; path = "libRNI18n-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C3C03C58B0864C93ABF5DDF7 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; name = "RNGestureHandler.xcodeproj"; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		E5C23133559744FAB9C0FFD6 /* libRNGestureHandler.a */ = {isa = PBXFileReference; name = "libRNGestureHandler.a"; path = "libRNGestureHandler.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		2124BD88DBF5479DB7597E51 /* RNAdMobManager.xcodeproj */ = {isa = PBXFileReference; name = "RNAdMobManager.xcodeproj"; path = "../node_modules/react-native-admob/ios/RNAdMobManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		237D08C707064B20B770F5B3 /* libRNAdMobManager.a */ = {isa = PBXFileReference; name = "libRNAdMobManager.a"; path = "libRNAdMobManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		DD7C02C4AA03491AA8882987 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceInfo.xcodeproj"; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		BC7C13F7ADCB48F3AAD82591 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo.a"; path = "libRNDeviceInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		3495E0E9EE8749898CD4A97B /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo-tvOS.a"; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
@@ -427,7 +424,6 @@
 				418B1127D7D54837B7B238A8 /* libRCTVideo.a in Frameworks */,
 				8AFA55E6AE4045ECADD208A0 /* libRNI18n.a in Frameworks */,
 				9FD271703E0E42B88F53BEDA /* libRNGestureHandler.a in Frameworks */,
-				DDFFD0CB8D0B4A098CBAEEF1 /* libRNAdMobManager.a in Frameworks */,
 				B9D5C6EBDD8746BD97D6116C /* libRNDeviceInfo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -622,7 +618,6 @@
 				ECC8D8C4A35745F7826AD897 /* RCTVideo.xcodeproj */,
 				AE15BEFD01F14B03921E0235 /* RNI18n.xcodeproj */,
 				C3C03C58B0864C93ABF5DDF7 /* RNGestureHandler.xcodeproj */,
-				2124BD88DBF5479DB7597E51 /* RNAdMobManager.xcodeproj */,
 				DD7C02C4AA03491AA8882987 /* RNDeviceInfo.xcodeproj */,
 			);
 			name = Libraries;

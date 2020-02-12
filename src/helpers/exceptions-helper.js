@@ -2,13 +2,8 @@ import DeviceInfo from 'react-native-device-info';
 
 import db from '../api/firebase';
 
-export const notifyError = async e => {
-    if (!(e instanceof Error)) return;
-
-    var errorInfo = {
-        name: e.name,
-        stack: e.stack,
-        message: e.message,
+export const getDeviceInfo = async () => {
+    return {
         timestamp: new Date().getTime(),
         apiLevel: DeviceInfo.getAPILevel(),
         batteryLevel: await DeviceInfo.getBatteryLevel(),
@@ -33,9 +28,20 @@ export const notifyError = async e => {
         lastUpdateTime: DeviceInfo.getLastUpdateTime(),
         manufacturer: DeviceInfo.getManufacturer(),
         maxMemory: DeviceInfo.getMaxMemory(),
-    };
+    }
+};
 
-    var key = db.database.ref().push().key;
+export const notifyError = async e => {
+    if (!(e instanceof Error)) return;
 
-    db.write('/errors/' + key, errorInfo);
-}
+    let deviceInfo = await getDeviceInfo();
+
+    let key = db.database.ref().push().key;
+
+    db.write('/errors/' + key, {
+        name: e.name,
+        stack: e.stack,
+        message: e.message,
+        deviceInfo
+    });
+};

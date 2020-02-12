@@ -11,7 +11,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.sbugert.rnadmob.RNAdMobPackage;
 import com.socialutilities.modules.fs.FileSystemPackage;
 import com.socialutilities.modules.settings.SettingsPackage;
 import com.socialutilities.modules.share.SharePackage;
@@ -34,7 +33,6 @@ public class MainApplication extends Application implements ReactApplication {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
                     new RNDeviceInfo(),
-                    new RNAdMobPackage(),
                     new RNGestureHandlerPackage(),
                     new RNI18nPackage(),
                     new VectorIconsPackage(),

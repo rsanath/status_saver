@@ -8,4 +8,4 @@ import HelpScreen from "./src/view/screens/help/help";
 
 console.disableYellowBox = true;
 
-AppRegistry.registerComponent(appName, () => HelpScreen);
+AppRegistry.registerComponent(appName, () => App);

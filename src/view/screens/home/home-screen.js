@@ -23,7 +23,7 @@ import Icon from "../../components/widgets/icon";
 
 let _titleBar;
 
-export default class App extends AppComponent {
+export default class HomeScreen extends AppComponent {
     static titleBar = () => _titleBar
 
     constructor(props) {
@@ -38,12 +38,6 @@ export default class App extends AppComponent {
 
     changeStatusSource = path => {
         store.dispatch(StatusActions.changeStatusPath(path))
-    }
-
-    getModalCompoenent = () => {
-        if (this.state.modalComponent == 'howtouse') {
-            return <HowToUseScreen/>
-        }
     }
 
     async componentDidMount() {
@@ -121,7 +115,6 @@ export default class App extends AppComponent {
                                 size={25}
                                 style={{alignSelf: 'flex-end',}}
                                 name={'close'}/>
-                            {this.getModalCompoenent()}
                         </View>
                     </View>
 

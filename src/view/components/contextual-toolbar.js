@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5
     },
     action: {
-        marginLeft: 10
+        marginHorizontal: 10
     },
     flexibleGap: {
         flex: 1

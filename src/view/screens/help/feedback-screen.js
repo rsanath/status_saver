@@ -11,6 +11,8 @@ import {
 import PropTypes from 'prop-types';
 
 import OutlineButton from "../../components/widgets/outline-button";
+import db from "../../../api/firebase";
+import {getDeviceInfo} from "../../../helpers/exceptions-helper";
 
 
 export default class FeedbackScreen extends React.Component {
@@ -23,13 +25,18 @@ export default class FeedbackScreen extends React.Component {
         };
     }
 
-    _submitFeedback = () => {
+    _submitFeedback = async () => {
         this.setState({submitting: true});
-        setTimeout(() => {
-            this.setState({submitting: false});
-            this.props.onSubmissionComplete && this.props.onSubmissionComplete(true)
-            ToastAndroid.showWithGravity('Submitted', ToastAndroid.SHORT, ToastAndroid.CENTER)
-        }, 2000)
+
+        let key = db.getKey();
+        let deviceInfo = await getDeviceInfo();
+        let feedback = this.state.feedbackText;
+
+        await db.write('feedbacks/' + key, {deviceInfo, feedback});
+
+        ToastAndroid.showWithGravity('Thanks for submitting your feedback.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        this.setState({submitting: false});
+        this.props.onSubmissionComplete && this.props.onSubmissionComplete()
     };
 
     _hideFeedbackForm = () => {
